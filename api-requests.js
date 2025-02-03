@@ -34,6 +34,17 @@ class ApiRequests {
     }
   }
 
+  async fetchProfileCustomers() {
+    try {
+      const response = await this.api.get('/profile_customers');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch customers:', error.response ? error.response.data : error.message);
+      throw error;
+    }
+  }
+
+
   async fetchJobs() {
     try {
       const response = await this.api.get('/jobs');

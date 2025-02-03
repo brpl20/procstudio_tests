@@ -14,8 +14,21 @@ const CustomerPage = require('./PageObjects/CustomerPage');
 
   try {
     await apiRequests.login(config.LOGIN_EMAIL, config.LOGIN_PASSWORD);
-    const customers = await apiRequests.fetchCustomers();
+    // const customers = await apiRequests.fetchCustomers();
+    // const profile_customers = await apiRequests.fetchProfileCustomers();
     console.log("Api Request Ok - Customers");
+    // const representatives = profile_customers.data
+    // .filter(customer => customer.attributes.customer_type === "representative")
+    // .map(customer => ({
+    //   id: customer.id,
+    //   name: `${customer.attributes.name} ${customer.attributes.last_name}`,
+    //   email: customer.attributes.default_email,
+    //   phone: customer.attributes.default_phone,
+    //   city: customer.attributes.city
+    // }));
+    // console.table(representatives);
+
+
 
     const landingPage = new LandingPage(page);
     await landingPage.navigateToLogin();
