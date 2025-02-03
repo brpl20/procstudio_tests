@@ -46,15 +46,19 @@ class CustomerPage {
     await this.page.getByRole('textbox', { name: 'DD/MM/YYYY' }).fill(generateBirthDate());
     await this.selectDropdownOption('gender', ['Masculino', 'Feminino']);
     await this.selectDropdownOption('civil_status', ['Solteiro', 'Casado', 'Divorciado', 'Viúvo', 'União Estável']);    
-    const capacity = await this.selectDropdownOption('capacity', ['Relativamente Incapaz', 'Absolutamente Incapaz']);
-    // const capacity = await this.selectDropdownOption('capacity', 'Capaz');
-    // const capacity = await this.selectDropdownOption('capacity', ['Capaz', 'Relativamente Incapaz', 'Absolutamente Incapaz']);
+    const capacity = await this.selectDropdownOption('capacity', ['Capaz', 'Relativamente Incapaz', 'Absolutamente Incapaz']);
     
     if (capacity !== 'Capaz') {
       console.log('Adding a representative...');
       await this.addRepresentative();
     }
   }
+
+  async addRepresentative() {
+    await this.representativePage.createNewRepresentative();
+  }
+
+  // TD: Check Double Method Calling addRepresentative ? 
 
   async selectDropdownOption(fieldName, options) {
     const randomOption = generateRandomItem(options);
@@ -65,9 +69,6 @@ class CustomerPage {
     return randomOption;
   }
 
-  async addRepresentative() {
-    await this.representativePage.createNewRepresentative();
-  }
 
   async submitForm() {
     await this.page.click('#submit_button_id');
