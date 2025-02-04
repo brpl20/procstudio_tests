@@ -13,7 +13,7 @@ class CustomerPageRepresentative {
     const random = Math.random();
     const representativeNames = getRepresentativeNames();
     console.log(representativeNames.length)
-    if (random < 0.95 && representativeNames.length > 0) {
+    if (random < 0.50 && representativeNames.length > 0) {
       await this.selectExistingRepresentative();
     } else {
       await this.createNewRepresentative();
@@ -50,6 +50,10 @@ class CustomerPageRepresentative {
     // Wait for the modal to appear
     const modal = await this.page.locator('form').filter({ hasText: 'Dados do Representante' });
     await modal.waitFor({ state: 'visible' });
+
+
+    const saveButton1 = await this.page.getByText('Salvar');
+
     await modal.getByPlaceholder('Informe o Nome do Representante').fill(faker.person.firstName());
     await modal.getByPlaceholder('Informe o Sobrenome do Representante').fill(faker.person.lastName());
     await modal.getByPlaceholder('Informe o CPF').fill(fakerbr.br.cpf());
@@ -71,11 +75,17 @@ class CustomerPageRepresentative {
     await this.selectDropdownOption(modal, 'nationality', ['Brasileiro', 'Estrangeiro']);
     await this.selectDropdownOption(modal, 'gender', ['Masculino', 'Feminino']);
     await this.selectDropdownOption(modal, 'civil_status', ['Solteiro', 'Casado', 'Divorciado', 'Viúvo', 'União Estável']);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // await modal.getByRole('button', { name: 'Salvar' }).click();
+    // await this.page.getByRole('button', { name: 'Próximo' }).click();
+    await saveButton1.click();
 
     // Wait for the modal to close
     await this.page.waitForSelector('form:has-text("Dados do Representante")', { state: 'hidden' });
 
     console.log('Representative created successfully');
+    
   }
 
   async selectDropdownOption(container, fieldName, options) {

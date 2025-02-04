@@ -1,5 +1,0 @@
-- Fix Double Method at CustomerPage.js;
-- Check all TD`s codebase;
-- Remove manual CPF generator to fakerbr CPF codebase;
-- Fix random selection of representatives;
-- Fix save button for representative;

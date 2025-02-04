@@ -38,7 +38,7 @@ class CustomerPage {
 }
 
 async selectCapacityDropdownOption() {
-  const options = ['Capaz', 'Relativamente Incapaz', 'Absolutamente Incapaz'];
+  const options = ['Relativamente Incapaz', 'Relativamente Incapaz', 'Absolutamente Incapaz'];
   const randomOption = options[Math.floor(Math.random() * options.length)];
   console.log(`Selecting random capacity option: ${randomOption}`);
 
@@ -77,9 +77,19 @@ async selectCapacityDropdownOption() {
     const selectedCapacity = await this.selectCapacityDropdownOption();
     console.log(`Selected capacity: ${selectedCapacity}`);
 
+    if (selectedCapacity !== 'Capaz') {
+      console.log('Adding a representative...');
+      await this.representativePage.createNewRepresentative()
+      await this.representativePage.selectExistingRepresentative();
+      await this.page.getByRole('button', { name: 'Próximo' }).click();
+    } else {
+      await this.page.getByRole('button', { name: 'Próximo' }).click();
+    }
+  }
+
+  
+
     // TD: CleanUP This code
-    // TD: Add Logic to follow along without representative
-    // TD: Finish Representative Lógic
 
     // await this.locator('#outlined-email').fill(faker.internet.email()); 
 
@@ -88,11 +98,7 @@ async selectCapacityDropdownOption() {
     // console.log(capacity);
     
     
-    if (selectedCapacity !== 'Capaz') {
-      console.log('Adding a representative...');
-      await this.representativePage.createNewRepresentative();
-    }
-  }
+  
 
   async selectDropdownOption(fieldName, options) {
     const randomOption = generateRandomItem(options);
@@ -104,10 +110,10 @@ async selectCapacityDropdownOption() {
   }
 
 
-  async submitForm() {
-    await this.page.click('#submit_button_id');
-    await this.page.waitForTimeout(5000);
-  }
+  // async submitForm() {
+  //   await this.page.click('#submit_button_id');
+  //   await this.page.waitForTimeout(5000);
+  // }
 }
 
 module.exports = CustomerPage;

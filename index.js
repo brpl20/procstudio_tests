@@ -7,6 +7,8 @@ const LandingPage = require('./PageObjects/LandingPage');
 const LoginPage = require('./PageObjects/LoginPage');
 const CustomerIndexPage = require('./PageObjects/CustomerIndexPage');
 const CustomerPage = require('./PageObjects/CustomerPage');
+const CustomerPageAddress = require('./PageObjects/CustomerPageAddress');
+
 
 async function initializeApp() {
   try {
@@ -55,7 +57,10 @@ async function initializeApp() {
     await page.waitForTimeout(1000);
     const customerPage = new CustomerPage(page);
     await customerPage.fillCustomerForm();
-    await customerPage.submitForm();
+    // await customerPage.submitForm();
+
+    const customerPageAddress = new CustomerPageAddress(page);
+    await customerPageAddress.fillCustomerAddress();
 
     console.log('Form submitted successfully!');
   } catch (error) {
