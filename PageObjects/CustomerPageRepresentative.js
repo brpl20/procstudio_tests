@@ -1,7 +1,7 @@
 // PageObjects/CustomerPageRepresentative.js
 const { faker } = require('@faker-js/faker');
 const fakerbr = require('faker-br');
-const { generateBirthDate, generateRG, generateCPF } = require('../utils');
+const { generateBirthDate, generateRG } = require('../utils');
 const { getRepresentativeNames } = require('../ApiRequests/representativeStore');
 
 class CustomerPageRepresentative {
