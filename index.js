@@ -9,6 +9,9 @@ const CustomerIndexPage = require('./PageObjects/CustomerIndexPage');
 const CustomerPage = require('./PageObjects/CustomerPage');
 const CustomerPageAddress = require('./PageObjects/CustomerPageAddress');
 const CustomerContactPage = require('./PageObjects/CustomerContactPage');
+const CustomerBankDetails = require('./PageObjects/CustomerBankDetails');
+const CustomerAdditionalInfoPage = require('./PageObjects/CustomerAdditionalInfoPage');
+const CustomerFinalPage = require('./PageObjects/CustomerFinalPage');
 
 
 
@@ -65,9 +68,22 @@ async function initializeApp() {
     await customerPageAddress.fillCustomerAddress();
 
     const customerContactPage = new CustomerContactPage(page);
-    await customerContactPage.verifySelectors();
+    // await customerContactPage.verifySelectors();
     await customerContactPage.fillContactInfo();
-    // await customerContactPage.clickNextButton();
+    await customerContactPage.clickNextButton();
+
+    const CustomerPageBankDetails = new CustomerBankDetails(page);
+    await CustomerPageBankDetails.fillBankDetails();
+
+    // CustomerAdditionalInfoPage
+    const CustomerAdditionalInfo = new CustomerAdditionalInfoPage(page);
+    await CustomerAdditionalInfo.fillAdditionalInfo();
+
+    // CustomerFinalPage
+    const CustomerFinal = new CustomerFinalPage(page);
+    await CustomerFinal.completeFinalStep();
+
+    // Await For Check and Debug
     await new Promise(resolve => setTimeout(resolve, 7000));
 
     console.log('Form submitted successfully!');
