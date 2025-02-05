@@ -8,6 +8,8 @@ const LoginPage = require('./PageObjects/LoginPage');
 const CustomerIndexPage = require('./PageObjects/CustomerIndexPage');
 const CustomerPage = require('./PageObjects/CustomerPage');
 const CustomerPageAddress = require('./PageObjects/CustomerPageAddress');
+const CustomerContactPage = require('./PageObjects/CustomerContactPage');
+
 
 
 async function initializeApp() {
@@ -61,6 +63,12 @@ async function initializeApp() {
 
     const customerPageAddress = new CustomerPageAddress(page);
     await customerPageAddress.fillCustomerAddress();
+
+    const customerContactPage = new CustomerContactPage(page);
+    await customerContactPage.verifySelectors();
+    await customerContactPage.fillContactInfo();
+    // await customerContactPage.clickNextButton();
+    await new Promise(resolve => setTimeout(resolve, 7000));
 
     console.log('Form submitted successfully!');
   } catch (error) {

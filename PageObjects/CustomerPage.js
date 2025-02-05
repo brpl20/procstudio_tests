@@ -38,7 +38,8 @@ class CustomerPage {
 }
 
 async selectCapacityDropdownOption() {
-  const options = ['Relativamente Incapaz', 'Relativamente Incapaz', 'Absolutamente Incapaz'];
+  const options = ['Capaz', 'Relativamente Incapaz', 'Absolutamente Incapaz'];
+  // const options = ['Capaz', 'Capaz', 'Capaz']; // for testing => faster fill 
   const randomOption = options[Math.floor(Math.random() * options.length)];
   console.log(`Selecting random capacity option: ${randomOption}`);
 
