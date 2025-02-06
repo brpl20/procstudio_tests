@@ -6,6 +6,9 @@ node_modules/
 # Environment variables
 .env
 
+# IA 
+prompts.md
+
 # Logs
 logs
 *.log
