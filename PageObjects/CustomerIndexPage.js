@@ -7,7 +7,6 @@ class CustomerIndexPage {
     async navigateToNewCustomerMenu() {
       await this.page.locator('a').first().click();
       await this.page.getByRole('heading', { name: 'Adicionar' }).click();
-      // Wait for the menu to appear
       await this.page.waitForTimeout(1000);
     }
   

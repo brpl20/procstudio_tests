@@ -1,19 +1,14 @@
 // index.js
 const { chromium } = require('playwright');
+const yargs = require('yargs');
 const config = require('./config');
 const apiRequests = require('./ApiRequests/api-requests');
 const { setRepresentativeNames } = require('./ApiRequests/representativeStore');
 const LandingPage = require('./PageObjects/LandingPage');
 const LoginPage = require('./PageObjects/LoginPage');
 const CustomerIndexPage = require('./PageObjects/CustomerIndexPage');
-const CustomerPage = require('./PageObjects/CustomerPage');
-const CustomerPageAddress = require('./PageObjects/CustomerPageAddress');
-const CustomerContactPage = require('./PageObjects/CustomerContactPage');
-const CustomerBankDetails = require('./PageObjects/CustomerBankDetails');
-const CustomerAdditionalInfoPage = require('./PageObjects/CustomerAdditionalInfoPage');
-const CustomerFinalPage = require('./PageObjects/CustomerFinalPage');
-
-
+const CustomerCreateController = require('./PageObjects/CustomerCreateController');
+const CustomerCompanyCreateController = require('./PageObjects/CustomerCompanyCreateController');
 
 async function initializeApp() {
   try {
@@ -33,7 +28,7 @@ async function initializeApp() {
     
     const representativeNames = representatives.map(rep => rep.name);
     setRepresentativeNames(representativeNames);
-    console.log("Representative Names:", representativeNames);
+    // console.log("Representative Names:", representativeNames);
 
     return representatives;
   } catch (error) {
@@ -42,7 +37,7 @@ async function initializeApp() {
   }
 }
 
-(async () => {
+async function runTest(customerType) {
   const browser = await chromium.launch({ headless: false });
   const context = await browser.newContext();
   const page = await context.newPage();
@@ -57,31 +52,29 @@ async function initializeApp() {
     await loginPage.login(config.LOGIN_EMAIL, config.LOGIN_PASSWORD);
 
     const customerIndexPage = new CustomerIndexPage(page);
-    await customerIndexPage.createPessoaFisica();
+
+    switch (customerType) {
+      case 'pessoaFisica':
+        await customerIndexPage.createPessoaFisica();
+        const customerCreateController = new CustomerCreateController(page);
+        await customerCreateController.createCustomer();
+        break;
+      case 'pessoaJuridica':
+        await customerIndexPage.createPessoaJuridica();
+        const customerCompanyCreateController = new CustomerCompanyCreateController(page);
+        await customerCompanyCreateController.createCompanyCustomer();
+        break;
+      case 'contador':
+        await customerIndexPage.createContador();
+        break;
+      case 'representanteLegal':
+        await customerIndexPage.createRepresentanteLegal();
+        break;
+      default:
+        throw new Error('Invalid customer type');
+    }
     
-    await page.waitForTimeout(1000);
-    const customerPage = new CustomerPage(page);
-    await customerPage.fillCustomerForm();
-    // await customerPage.submitForm();
 
-    const customerPageAddress = new CustomerPageAddress(page);
-    await customerPageAddress.fillCustomerAddress();
-
-    const customerContactPage = new CustomerContactPage(page);
-    // await customerContactPage.verifySelectors();
-    await customerContactPage.fillContactInfo();
-    await customerContactPage.clickNextButton();
-
-    const CustomerPageBankDetails = new CustomerBankDetails(page);
-    await CustomerPageBankDetails.fillBankDetails();
-
-    // CustomerAdditionalInfoPage
-    const CustomerAdditionalInfo = new CustomerAdditionalInfoPage(page);
-    await CustomerAdditionalInfo.fillAdditionalInfo();
-
-    // CustomerFinalPage
-    const CustomerFinal = new CustomerFinalPage(page);
-    await CustomerFinal.completeFinalStep();
 
     // Await For Check and Debug
     await new Promise(resolve => setTimeout(resolve, 7000));
@@ -92,10 +85,30 @@ async function initializeApp() {
   } finally {
     await browser.close();
   }
-})();
+}
 
-// If you need to export anything for use in other files, do it here
+// Parse command line arguments
+const argv = yargs
+  .command('create', 'Create a new customer', {
+    type: {
+      description: 'Type of customer to create',
+      alias: 't',
+      choices: ['pessoaFisica', 'pessoaJuridica', 'contador', 'representanteLegal'],
+      demandOption: true
+    }
+  })
+  .help()
+  .alias('help', 'h')
+  .argv;
+
+if (argv._.includes('create') && argv.type) {
+  runTest(argv.type);
+} else {
+  console.log('Please specify a valid command and customer type.');
+  yargs.showHelp();
+}
+
 module.exports = {
   initializeApp,
-  // Add any other exports if needed
+  runTest
 };
