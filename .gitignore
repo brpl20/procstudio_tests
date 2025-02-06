@@ -8,6 +8,7 @@ node_modules/
 
 # IA 
 prompts.md
+prompts*
 
 # Logs
 logs

@@ -1,8 +1,21 @@
 # ProcStudio Testing 
 
-Test Suit for ProcStudio in _staging using playwright.
+Test Suit for ProcStudio in _staging using playwright: 
+- npm test create -- --type=pessoaFisica 
+- npm test create -- --type=pessoaJuridica
+- npm test create -- --type=contador
+- npm test create -- --type=representanteLegal
 
 ## TODO List
+
+- [./PageObjects/CustomerPage.js:93]     CleanUP This code
+- [./PageObjects/CustomerPageRepresentative.js:46]     Fix Select Representative for Company
+- [./PageObjects/CustomerPageRepresentative.js:47]     Selectors not working
+- [./PageObjects/CustomerFinalPage.js:88]     Implementar randomizacao no futuro 
+- [./PageObjects/CustomerContactPage.js:19]   Fix to 0.5 when problem is solved
+- [./PageObjects/CustomerContactPage.js:20]   Create Card to Solve + Problem in Playwright
+- [./PageObjects/CustomerContactPage.js:21]   Test using another library?
+- [./Helpers/pageMapper.js:8] Fix Trabalho -> Need form validators to push "next" button
 
 - [./PageObjects/CustomerPage.js:93]     CleanUP This code
 - [./PageObjects/CustomerPageRepresentative.js:46]     Fix Select Representative for Company

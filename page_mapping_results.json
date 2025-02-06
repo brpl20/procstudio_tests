@@ -1,0 +1,1087 @@
+[
+  {
+    "route": "/cadastrar?type=cliente/contador",
+    "pages": [
+      {
+        "url": "https://staging_adm.procstudio.com.br/cadastrar?type=cliente/contador",
+        "formElements": {
+          "textInputs": [
+            {
+              "name": "accountant_id",
+              "isRequired": false
+            },
+            {
+              "name": "name",
+              "isRequired": false
+            },
+            {
+              "name": "last_name",
+              "isRequired": false
+            },
+            {
+              "name": "phone_number",
+              "isRequired": false
+            },
+            {
+              "name": "email",
+              "isRequired": false
+            }
+          ],
+          "dateInputs": [],
+          "dropdowns": []
+        },
+        "elementDetails": {
+          "forms": {
+            "count": 1,
+            "details": [
+              {
+                "name": null,
+                "id": null,
+                "type": null,
+                "value": null,
+                "isRequired": false
+              }
+            ]
+          },
+          "inputs": {
+            "count": 5,
+            "details": [
+              {
+                "name": "accountant_id",
+                "id": "outlined-accountant_id",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "name",
+                "id": "outlined-name",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "last_name",
+                "id": "outlined-last_name",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "phone_number",
+                "id": "outlined-phone_number",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "email",
+                "id": "outlined-email",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              }
+            ]
+          },
+          "selects": {
+            "count": 0,
+            "details": []
+          },
+          "checkboxes": {
+            "count": 0,
+            "details": []
+          },
+          "radios": {
+            "count": 0,
+            "details": []
+          },
+          "textareas": {
+            "count": 0,
+            "details": []
+          },
+          "buttons": {
+            "count": 6,
+            "details": [
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              }
+            ]
+          }
+        },
+        "hasNextButton": false,
+        "hasSaveButton": true
+      }
+    ]
+  },
+  {
+    "route": "/cadastrar?type=cliente/representante",
+    "pages": [
+      {
+        "url": "https://staging_adm.procstudio.com.br/cadastrar?type=cliente/representante",
+        "formElements": {
+          "textInputs": [],
+          "dateInputs": [],
+          "dropdowns": []
+        },
+        "elementDetails": {
+          "forms": {
+            "count": 1,
+            "details": [
+              {
+                "name": null,
+                "id": null,
+                "type": null,
+                "value": null,
+                "isRequired": false
+              }
+            ]
+          },
+          "inputs": {
+            "count": 19,
+            "details": [
+              {
+                "name": null,
+                "id": ":r0:",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "name",
+                "id": "outlined-name",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "last_name",
+                "id": "outlined-last_name",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "CPF",
+                "id": "outlined-CPF",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "RG",
+                "id": "outlined-RG",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": ":r6:",
+                "type": "text",
+                "value": "06/02/2025",
+                "isRequired": false
+              },
+              {
+                "name": "nationality",
+                "id": null,
+                "type": null,
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "gender",
+                "id": null,
+                "type": null,
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "civil_status",
+                "id": null,
+                "type": null,
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "profession",
+                "id": "outlined-profession",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "cep",
+                "id": "outlined-cep",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "street",
+                "id": "outlined-street",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "number",
+                "id": "outlined-number",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "description",
+                "id": "outlined-description",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "neighborhood",
+                "id": "outlined-neighborhood",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "city",
+                "id": "outlined-city",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "state",
+                "id": "outlined-state",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "phone",
+                "id": "outlined-phone",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "email",
+                "id": "outlined-email",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              }
+            ]
+          },
+          "selects": {
+            "count": 0,
+            "details": []
+          },
+          "checkboxes": {
+            "count": 0,
+            "details": []
+          },
+          "radios": {
+            "count": 0,
+            "details": []
+          },
+          "textareas": {
+            "count": 0,
+            "details": []
+          },
+          "buttons": {
+            "count": 8,
+            "details": [
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              }
+            ]
+          }
+        },
+        "hasNextButton": false,
+        "hasSaveButton": true
+      }
+    ]
+  },
+  {
+    "route": "/cadastrar?type=tarefa",
+    "pages": [
+      {
+        "url": "https://staging_adm.procstudio.com.br/cadastrar?type=tarefa",
+        "formElements": {
+          "textInputs": [],
+          "dateInputs": [],
+          "dropdowns": []
+        },
+        "elementDetails": {
+          "forms": {
+            "count": 0,
+            "details": []
+          },
+          "inputs": {
+            "count": 0,
+            "details": []
+          },
+          "selects": {
+            "count": 0,
+            "details": []
+          },
+          "checkboxes": {
+            "count": 0,
+            "details": []
+          },
+          "radios": {
+            "count": 0,
+            "details": []
+          },
+          "textareas": {
+            "count": 0,
+            "details": []
+          },
+          "buttons": {
+            "count": 2,
+            "details": [
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              }
+            ]
+          }
+        },
+        "hasNextButton": false,
+        "hasSaveButton": false
+      }
+    ]
+  },
+  {
+    "route": "/cadastrar?type=usuario",
+    "pages": [
+      {
+        "url": "https://staging_adm.procstudio.com.br/cadastrar?type=usuario",
+        "formElements": {
+          "textInputs": [],
+          "dateInputs": [],
+          "dropdowns": []
+        },
+        "elementDetails": {
+          "forms": {
+            "count": 1,
+            "details": [
+              {
+                "name": null,
+                "id": null,
+                "type": null,
+                "value": null,
+                "isRequired": false
+              }
+            ]
+          },
+          "inputs": {
+            "count": 29,
+            "details": [
+              {
+                "name": "name",
+                "id": "outlined-name",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "last_name",
+                "id": "outlined-last_name",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "cpf",
+                "id": "outlined-cpf",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "rg",
+                "id": "outlined-rg",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": ":r4:",
+                "type": "text",
+                "value": "DD/MM/YYYY",
+                "isRequired": false
+              },
+              {
+                "name": "mother_name",
+                "id": "outlined-mother_name",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "gender",
+                "id": null,
+                "type": null,
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "civil_status",
+                "id": null,
+                "type": null,
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "nationality",
+                "id": null,
+                "type": null,
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "cep",
+                "id": "outlined-cep",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "address",
+                "id": "outlined-address",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "number",
+                "id": "outlined-number",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "description",
+                "id": "outlined-description",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "neighborhood",
+                "id": "outlined-neighborhood",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "city",
+                "id": "outlined-city",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "state",
+                "id": "outlined-state",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "phone",
+                "id": "outlined-phone",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "email",
+                "id": "outlined-email",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "oab",
+                "id": "outlined-oab",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "role",
+                "id": null,
+                "type": null,
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": ":rl:",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": "multiple-limit-tags",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "agency",
+                "id": "outlined-agency",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "op",
+                "id": "outlined-op",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "account",
+                "id": "outlined-account",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "pix",
+                "id": "outlined-pix",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "userEmail",
+                "id": "outlined-userEmail",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "password",
+                "id": ":ru:",
+                "type": "password",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "confirmPassword",
+                "id": ":rv:",
+                "type": "password",
+                "value": "",
+                "isRequired": false
+              }
+            ]
+          },
+          "selects": {
+            "count": 0,
+            "details": []
+          },
+          "checkboxes": {
+            "count": 0,
+            "details": []
+          },
+          "radios": {
+            "count": 0,
+            "details": []
+          },
+          "textareas": {
+            "count": 0,
+            "details": []
+          },
+          "buttons": {
+            "count": 10,
+            "details": [
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              }
+            ]
+          }
+        },
+        "hasNextButton": false,
+        "hasSaveButton": true
+      }
+    ]
+  },
+  {
+    "route": "/cadastrar?type=escritorio",
+    "pages": [
+      {
+        "url": "https://staging_adm.procstudio.com.br/cadastrar?type=escritorio",
+        "formElements": {
+          "textInputs": [],
+          "dateInputs": [],
+          "dropdowns": []
+        },
+        "elementDetails": {
+          "forms": {
+            "count": 1,
+            "details": [
+              {
+                "name": null,
+                "id": null,
+                "type": null,
+                "value": null,
+                "isRequired": false
+              }
+            ]
+          },
+          "inputs": {
+            "count": 23,
+            "details": [
+              {
+                "name": null,
+                "id": ":r0:",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "name",
+                "id": "outlined-name",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "oab",
+                "id": "outlined-oab",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "cnpj_cpf",
+                "id": "outlined-cnpj_cpf",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "society_type",
+                "id": null,
+                "type": null,
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": ":r6:",
+                "type": "text",
+                "value": "DD/MM/YYYY",
+                "isRequired": false
+              },
+              {
+                "name": "accounting_type",
+                "id": null,
+                "type": null,
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": "multiple-limit-tags",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "agency",
+                "id": "outlined-agency",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "operation",
+                "id": "outlined-operation",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "acccount",
+                "id": "outlined-acccount",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "pix",
+                "id": "outlined-pix",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "cep",
+                "id": "outlined-cep",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "address",
+                "id": "outlined-address",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "number",
+                "id": "outlined-number",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "description",
+                "id": "outlined-description",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "neighborhood",
+                "id": "outlined-neighborhood",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "city",
+                "id": "outlined-city",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "state",
+                "id": "outlined-state",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "phone",
+                "id": "outlined-phone",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "email",
+                "id": "outlined-email",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": "webSite",
+                "id": "outlined-webSite",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": "multiple-limit-tags",
+                "type": "text",
+                "value": "",
+                "isRequired": false
+              }
+            ]
+          },
+          "selects": {
+            "count": 0,
+            "details": []
+          },
+          "checkboxes": {
+            "count": 0,
+            "details": []
+          },
+          "radios": {
+            "count": 0,
+            "details": []
+          },
+          "textareas": {
+            "count": 0,
+            "details": []
+          },
+          "buttons": {
+            "count": 12,
+            "details": [
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              },
+              {
+                "name": null,
+                "id": null,
+                "type": "button",
+                "value": null,
+                "isRequired": false
+              }
+            ]
+          }
+        },
+        "hasNextButton": false,
+        "hasSaveButton": true
+      }
+    ]
+  }
+]

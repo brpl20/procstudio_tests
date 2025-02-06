@@ -47,9 +47,9 @@ async function testSelectors(page) {
     {
       name: 'Password Input',
       selectors: [
-        { name: 'ID', selector: '#outlined-password' },
-        { name: 'Name attribute', selector: 'input[name="password"]' },
-        { name: 'Placeholder', selector: 'input[placeholder="Informe a Senha"]' },
+        { name: 'ID', selector: '#outlined-inss_password' },
+        { name: 'Name attribute', selector: 'input[name="inss_password"]' },
+        { name: 'Placeholder', selector: 'input[placeholder="Informe o Senha do meu INSS"]' },
       ]
     }
   ];
@@ -117,10 +117,13 @@ class CustomerAdditionalInfoPage {
 
   async fillPassword() {
     const passwordSelectors = [
-      '#outlined-password',
-      'input[name="password"]',
-      'input[placeholder="Informe a Senha"]',
+      '#outlined-inss_password',
+      'input[name="inss_password"]',
+      'input[placeholder="Informe o Senha do meu INSS"]',
     ];
+
+
+  // <input aria-invalid="false" autocomplete="off" id="outlined-inss_password" name="inss_password" placeholder="Informe o Senha do meu INSS" type="text" class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall mui-style-1o6z5ng" value=""></input>
 
     let passwordInput;
     for (const selector of passwordSelectors) {
@@ -139,6 +142,7 @@ class CustomerAdditionalInfoPage {
                      faker.string.numeric('#') + 
                      faker.string.symbol();
     await passwordInput.fill(password);
+    console.log(`Password: ${password}`);
   }
 
   async fillAdditionalInfo() {
@@ -150,7 +154,8 @@ class CustomerAdditionalInfoPage {
     await this.fillBenefitNumber();
     await this.fillNIT();
     await this.fillMotherName();
-    // await this.fillPassword();
+    await this.fillPassword();
+    await this.page.waitForTimeout(2000);
 
     // Click Próximo button (assuming it exists on this page as well)
     await this.page.getByRole('button', { name: 'Próximo' }).click();
