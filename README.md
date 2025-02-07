@@ -5,6 +5,13 @@ Test Suit for ProcStudio in _staging using playwright:
 - npm test create -- --type=pessoaJuridica
 - npm test create -- --type=contador
 - npm test create -- --type=representanteLegal
+- npm test create -- --type=tarefa
+- npm test create -- --type=usuario
+- npm test create -- --type=escritorio
+
+or: 
+
+- node index.js create -t pessoaFisica (... and other methods)
 
 ## TODO List
 
@@ -43,3 +50,5 @@ Test Suit for ProcStudio in _staging using playwright:
 - Arrumar "Senha do INSS"
 - Aguardar alterações do front => `+` e `download`
 - Guardar Dados Criados para fazer comparação com o documento (Qual melhor metodologia para isso?)
+- Atualizar e ajustar métodos novos: Contador / Escritório / Usuário / Representante (Direto)
+- Criar método de new Work;
