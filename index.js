@@ -8,6 +8,7 @@ const LoginPage = require('./PageObjects/LoginPage');
 const CustomerIndexPage = require('./PageObjects/CustomerIndexPage');
 const CustomerCreateController = require('./PageObjects/CustomerCreateController');
 const CustomerCompanyCreateController = require('./PageObjects/CustomerCompanyCreateController');
+const RepresentativeCreatePage = require('./PageObjects/RepresentativeCreatePage');
 
 // Import New Builders
 const AccountantCreate = require('./PageObjects/AccountantCreate');
@@ -79,9 +80,9 @@ async function runTest(customerType) {
 
       case 'representanteLegal':
         // Representante Legal Logic
-        const customerPageRepresentative = new CustomerPageRepresentative(page);
-        await customerIndexPage.createRepresentanteLegal();
-        await customerPageRepresentative.createNewRepresentative();
+        // TD: Corrigir as rotas para não ficar mudando depois entre staging e produção toda hora -- config routes? 
+        const representativeCreatePage = new RepresentativeCreatePage(page);
+        await representativeCreatePage.fillRepresentativeForm();
         break;
 
       case 'tarefa':
