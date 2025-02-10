@@ -1,6 +1,7 @@
 // PageObjects/CustomerPage.js
 const { faker, fakerbr, generateRandomItem, generateRG, generateBirthDate, selectRandomItemFromOptions } = require('../utils');
 const CustomerPageRepresentative = require('./CustomerPageRepresentative');
+const CustomerDataStore = require('../Helpers/customerDataStore');
 
 class CustomerPage {
   constructor(page) {
@@ -67,17 +68,29 @@ async selectCapacityDropdownOption(capacity = null) {
 }
 
   async fillCustomerForm() {
+    const firstName = faker.person.firstName();
+    const lastName = faker.person.lastName();
+    const rg = generateRG();
+    const cpf = fakerbr.br.cpf();
+
     // Text Fields 
-    await this.page.fill('input[name="name"]', faker.person.firstName());
-    await this.page.fill('input[name="last_name"]', faker.person.lastName());
-    await this.page.fill('input[name="rg"]', generateRG());
-    await this.page.fill('input[name="cpf"]', fakerbr.br.cpf());
+    await this.page.fill('input[name="name"]', firstName);
+    await this.page.fill('input[name="last_name"]', lastName);
+    await this.page.fill('input[name="rg"]', rg);
+    await this.page.fill('input[name="cpf"]', cpf);
     
     // DropDowns and Special Fields
     await this.page.getByRole('textbox', { name: 'DD/MM/YYYY' }).fill(generateBirthDate());
     await this.selectDropdownOption('nationality', ['Brasileiro', 'Estrangeiro']);
     await this.selectDropdownOption('gender', ['Masculino', 'Feminino']);
     await this.selectDropdownOption('civil_status', ['Solteiro', 'Casado', 'Divorciado', 'Viúvo', 'União Estável']);    
+    
+    // Store Data for Backend and Document Checking
+    // TD: Keep the method with the remaining fields
+    CustomerDataStore.set('firstName', firstName);
+    CustomerDataStore.set('lastName', lastName);
+    CustomerDataStore.set('rg', rg);
+    CustomerDataStore.set('cpf', cpf);
     
     const selectedCapacity = await this.selectCapacityDropdownOption();
     console.log(`Selected capacity: ${selectedCapacity}`);

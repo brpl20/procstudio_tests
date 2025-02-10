@@ -22,7 +22,6 @@ async function initializeApp() {
     await apiRequests.login(config.LOGIN_EMAIL, config.LOGIN_PASSWORD);
     const profile_customers = await apiRequests.fetchProfileCustomers();
     console.log("Api Request Ok - Customers");
-    // console.log(profile_customers);
 
     console.log(profile_customers.data);
     const representatives = profile_customers.data
@@ -35,9 +34,16 @@ async function initializeApp() {
         city: customer.attributes.city
       }));
 
+    // Check if representatives is an array and not empty
+    if (!Array.isArray(representatives) || representatives.length === 0) {
+      const errorMessage = "Objeto diferente de um array ou array vazio, por favor verifique se há um representante cadastrado ou se houve um erro na api ou no método de filtragem de dados";
+      console.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+
     console.log(representatives);
     const representativeNames = representatives.map(rep => rep.name);
-    console.log(representativeNames)
+    console.log(representativeNames);
     setRepresentativeNames(representativeNames);
     return representatives;
   } catch (error) {
