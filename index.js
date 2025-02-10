@@ -22,9 +22,11 @@ async function initializeApp() {
     await apiRequests.login(config.LOGIN_EMAIL, config.LOGIN_PASSWORD);
     const profile_customers = await apiRequests.fetchProfileCustomers();
     console.log("Api Request Ok - Customers");
+    // console.log(profile_customers);
 
+    console.log(profile_customers.data);
     const representatives = profile_customers.data
-      .filter(customer => customer.attributes.customer_type === "representante")
+      .filter(customer => customer.attributes.customer_type === "representative")
       .map(customer => ({
         id: customer.id,
         name: `${customer.attributes.name} ${customer.attributes.last_name}`,
@@ -33,7 +35,9 @@ async function initializeApp() {
         city: customer.attributes.city
       }));
 
+    console.log(representatives);
     const representativeNames = representatives.map(rep => rep.name);
+    console.log(representativeNames)
     setRepresentativeNames(representativeNames);
     return representatives;
   } catch (error) {
@@ -42,7 +46,7 @@ async function initializeApp() {
   }
 }
 
-async function runTest(customerType) {
+async function runTest(customerType, capacity) {
   const browser = await chromium.launch({ headless: false });
   const context = await browser.newContext();
   const page = await context.newPage();
@@ -62,7 +66,7 @@ async function runTest(customerType) {
       case 'pessoaFisica':
         await customerIndexPage.createPessoaFisica();
         const customerCreateController = new CustomerCreateController(page);
-        await customerCreateController.createCustomer();
+        await customerCreateController.createCustomer(capacity);
         break;
 
       case 'pessoaJuridica':
@@ -104,7 +108,7 @@ async function runTest(customerType) {
         break;
 
       default:
-        throw new Error('Invalid customer type');
+        throw new Error('Invalid test type');
     }
 
     // Await For Check and Debug
@@ -118,6 +122,7 @@ async function runTest(customerType) {
 }
 
 // Parse command line arguments
+// TD: Argv pessoa fisica relativamente incaapz -> Não está funcionando -> Passa sem argumento e vai para o random 
 const argv = yargs
   .command('create', 'Create a new customer', {
     type: {
@@ -133,14 +138,33 @@ const argv = yargs
         'escritorio'
       ],
       demandOption: true
+    },
+    capacity: {
+      description: 'Specify the capacity of the customer (optional). Only relevant for "pessoaFisica". Use "random" for random selection.',
+      alias: 'c',
+      default: null, // Default is null (not required)
+      coerce: (value) => {
+        if (value === null || value === 'random') return null; // Allow null or "random"
+        if (['Capaz', 'Relativamente Incapaz', 'Absolutamente Incapaz'].includes(value)) return value;
+        throw new Error(`Invalid capacity value: ${value}`);
+      }
     }
+  })
+  .check((argv) => {
+    // Validate capacity only if type is pessoaFisica
+    if (argv.type === 'pessoaFisica' && argv.capacity === null) {
+      console.log('Capacity is required for pessoaFisica. Using random selection.');
+    } else if (argv.type !== 'pessoaFisica' && argv.capacity !== null) {
+      console.warn('Capacity is ignored for non-pessoaFisica types.');
+    }
+    return true; // Validation passes
   })
   .help()
   .alias('help', 'h')
   .argv;
 
 if (argv._.includes('create') && argv.type) {
-  runTest(argv.type);
+  runTest(argv.type, argv.capacity); // Pass the capacity argument to runTest
 } else {
   console.log('Please specify a valid command and customer type.');
   yargs.showHelp();

@@ -17,8 +17,8 @@ class CustomerCreateController {
     this.customerFinal = new CustomerFinalPage(page);
   }
 
-  async createCustomer() {
-    await this.fillCustomerForm();
+  async createCustomer(capacity=null) {
+    await this.fillCustomerForm(capacity);
     await this.fillCustomerAddress();
     await this.fillContactInfo();
     await this.fillBankDetails();

@@ -1,7 +1,10 @@
 # ProcStudio Testing 
 
 Test Suit for ProcStudio in _staging using playwright: 
-- npm test create -- --type=pessoaFisica 
+- npm test create -- --type=pessoaFisica --capacity=random
+- npm test create -- --type=pessoaFisica --capacity=Capaz
+- npm test create -- --type=pessoaFisica --capacity="Relativamente Incapaz" 
+- npm test create -- --type=pessoaFisica --capacity="Absolutamente Incapaz"
 - npm test create -- --type=pessoaJuridica
 - npm test create -- --type=contador
 - npm test create -- --type=representanteLegal

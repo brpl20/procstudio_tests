@@ -1,6 +1,5 @@
 // PageObjects/AccountantCreate.js
-const fakerbr = require('faker-br');
-const { faker } = require('@faker-js/faker');
+const { faker, fakerbr, generateRandomItem, generateBirthDate, selectRandomItemFromOptions } = require('../utils');
 
 class AccountantCreate {
   constructor(page) {

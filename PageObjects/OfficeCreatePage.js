@@ -1,6 +1,5 @@
 // PageObjects/OfficeCreatePage.js
-const fakerbr = require('faker-br');
-const { faker } = require('@faker-js/faker');
+const { faker, fakerbr } = require('../utils');
 
 class OfficeCreatePage {
   constructor(page) {

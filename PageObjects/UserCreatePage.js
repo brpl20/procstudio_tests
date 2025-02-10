@@ -1,6 +1,5 @@
 // PageObjects/UserCreatePage.js
-const fakerbr = require('faker-br');
-const { faker } = require('@faker-js/faker');
+const { faker, fakerbr, generateRG } = require('../utils');
 
 class UserCreatePage {
   constructor(page) {
@@ -22,7 +21,7 @@ class UserCreatePage {
 
     // Fill RG
     const rgInput = await this.page.locator('#outlined-rg');
-    await rgInput.fill(fakerbr.br.rg());
+    await rgInput.fill(generateRG());
 
     // Fill mother_name
     const motherNameInput = await this.page.locator('#outlined-mother_name');

@@ -1,6 +1,5 @@
 // PageObjects/CustomerPageAddress.js
-const fakerbr = require('faker-br');
-const { faker } = require('@faker-js/faker');
+const { faker, fakerbr } = require('../utils');
 
 async function testSelectors(page) {
   const elements = [

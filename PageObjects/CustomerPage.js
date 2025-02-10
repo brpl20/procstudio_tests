@@ -1,6 +1,5 @@
 // PageObjects/CustomerPage.js
-const { faker, generateRandomItem, generateBirthDate, generateRG } = require('../utils');
-const fakerbr = require('faker-br');
+const { faker, fakerbr, generateRandomItem, generateRG, generateBirthDate, selectRandomItemFromOptions } = require('../utils');
 const CustomerPageRepresentative = require('./CustomerPageRepresentative');
 
 class CustomerPage {
@@ -9,9 +8,10 @@ class CustomerPage {
     this.representativePage = new CustomerPageRepresentative(page);
   }
 
+  // Method for selection dropdowns
   async selectDropdownOption(fieldName, options) {
-    // Select a random option from the array
-    const randomOption = options[Math.floor(Math.random() * options.length)];
+    // Select a random option from the array got by api 
+    const randomOption = this.selectRandomItemFromOptions(options);
     console.log(`Selecting random option: ${randomOption} from ${fieldName} dropdown`);
 
     // Find the form or container for the representative
@@ -34,18 +34,20 @@ class CustomerPage {
     await this.page.waitForTimeout(500);
     console.log('Waited for dropdown to close');
 
-    return randomOption; // Return the selected option
+    return randomOption;
 }
 
-async selectCapacityDropdownOption() {
+// Method for selection dropdowns of capacity
+async selectCapacityDropdownOption(capacity = null) {
   const options = ['Capaz', 'Relativamente Incapaz', 'Absolutamente Incapaz'];
-  // const options = ['Capaz', 'Capaz', 'Capaz']; // for testing => faster fill 
-  const randomOption = options[Math.floor(Math.random() * options.length)];
-  console.log(`Selecting random capacity option: ${randomOption}`);
 
+  // Use the provided capacity or select a random one if not provided
+  console.log(capacity)
+  const selectedOption = capacity || await selectRandomItemFromOptions(options);
+  console.log(`Selecting capacity option: ${selectedOption}`);
+
+  // Select Capacity DropDown
   await this.page.locator('#mui-component-select-capacity').click();
-  // await modal.locator('#outlined-email').fill(faker.internet.email()); 
-
   console.log('Clicked capacity dropdown');
 
   // Wait for the options to be visible
@@ -53,53 +55,43 @@ async selectCapacityDropdownOption() {
   console.log('Listbox is visible');
 
   // Find the specific option and click it
-  // Use a more specific selector to avoid ambiguity
-  const option = this.page.locator('li[role="option"]').filter({ hasText: new RegExp(`^${randomOption}$`) });
+  const option = this.page.locator('li[role="option"]').filter({ hasText: new RegExp(`^${selectedOption}$`) });
   await option.click();
-  console.log(`Clicked option: ${randomOption}`);
+  console.log(`Clicked option: ${selectedOption}`);
 
   // Wait for the dropdown to close
   await this.page.waitForTimeout(500);
   console.log('Waited for dropdown to close');
 
-  return randomOption; // Return the selected option
+  return selectedOption;
 }
 
   async fillCustomerForm() {
+    // Text Fields 
     await this.page.fill('input[name="name"]', faker.person.firstName());
     await this.page.fill('input[name="last_name"]', faker.person.lastName());
     await this.page.fill('input[name="rg"]', generateRG());
     await this.page.fill('input[name="cpf"]', fakerbr.br.cpf());
-
-    await this.selectDropdownOption('nationality', ['Brasileiro', 'Estrangeiro']);
+    
+    // DropDowns and Special Fields
     await this.page.getByRole('textbox', { name: 'DD/MM/YYYY' }).fill(generateBirthDate());
+    await this.selectDropdownOption('nationality', ['Brasileiro', 'Estrangeiro']);
     await this.selectDropdownOption('gender', ['Masculino', 'Feminino']);
     await this.selectDropdownOption('civil_status', ['Solteiro', 'Casado', 'Divorciado', 'Viúvo', 'União Estável']);    
+    
     const selectedCapacity = await this.selectCapacityDropdownOption();
     console.log(`Selected capacity: ${selectedCapacity}`);
 
     if (selectedCapacity !== 'Capaz') {
       console.log('Adding a representative...');
       await this.representativePage.createNewRepresentative()
+      // Remover quando o proprio representante for criado e escolhido automaticamente
       await this.representativePage.selectExistingRepresentative();
       await this.page.getByRole('button', { name: 'Próximo' }).click();
     } else {
       await this.page.getByRole('button', { name: 'Próximo' }).click();
     }
   }
-
-  
-
-    // TD: CleanUP This code
-
-    // await this.locator('#outlined-email').fill(faker.internet.email()); 
-
-    // const capacity = await this.selectDropdownOption('capacity', ['Capaz', 'Relativamente Incapaz', 'Absolutamente Incapaz']);
-    // await this.page.locator('mui-component-select-capacity').fill(faker.internet.email()); 
-    // console.log(capacity);
-    
-    
-  
 
   async selectDropdownOption(fieldName, options) {
     const randomOption = generateRandomItem(options);
@@ -110,11 +102,6 @@ async selectCapacityDropdownOption() {
     return randomOption;
   }
 
-
-  // async submitForm() {
-  //   await this.page.click('#submit_button_id');
-  //   await this.page.waitForTimeout(5000);
-  // }
 }
 
 module.exports = CustomerPage;

@@ -1,5 +1,5 @@
 // PageObjects/CustomerContactPage.js
-const { faker } = require('@faker-js/faker');
+const { faker, fakerbr } = require('../utils');
 
 class CustomerContactPage {
   constructor(page) {

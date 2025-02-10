@@ -1,5 +1,5 @@
 // PageObjects/CustomerFinalPage.js
-const { faker } = require('@faker-js/faker');
+const { faker, fakerbr } = require('../utils');
 const DownloadModal = require('./CustomerFinalPageDownloadModal');
 
 async function testSelectors(page) {

@@ -1,7 +1,5 @@
 // PageObjects/CustomerPageRepresentative.js
-const { faker } = require('@faker-js/faker');
-const fakerbr = require('faker-br');
-const { generateBirthDate, generateRG } = require('../utils');
+const { faker, fakerbr, generateRG, generateRandomItem, generateBirthDate, selectRandomItemFromOptions } = require('../utils');
 const { getRepresentativeNames } = require('../ApiRequests/representativeStore');
 const { findFillableFormElements } = require('../Helpers/formHelper');
 
@@ -25,8 +23,10 @@ class CustomerPageRepresentative {
   async selectExistingRepresentative() {
     console.log('Selecting an existing representative...');
     const representativeNames = getRepresentativeNames();
+    console.log("Teste ==>");
+    console.log(representativeNames);
     const randomName = this.getRandomItem(representativeNames);
-    
+    console.log(randomName);
     await this.page.fill('#multiple-limit-tags', randomName);
     await this.page.press('#multiple-limit-tags', 'Enter');
     
