@@ -1,5 +1,7 @@
 // PageObjects/CustomerFinalPage.js
 const { faker, fakerbr } = require('../utils');
+const { Jimp } = require("jimp");
+const path = require('path');
 const DownloadModal = require('./CustomerFinalPageDownloadModal');
 
 async function testSelectors(page) {
@@ -119,8 +121,8 @@ class CustomerFinalPage {
   async handleDownloadModal() {
     await this.downloadModal.waitForModal();
     await this.downloadModal.testSelectors();
-    await this.downloadModal.initiateDownload();
-    await this.downloadModal.closeModal();
+    await this.downloadModal.initiateDownload3();
+    // await this.downloadModal.closeModal();
   }
 
   async completeFinalStep() {
