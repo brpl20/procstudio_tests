@@ -1,19 +1,20 @@
 // PageObjects/CustomerPage.js
 const { faker, fakerbr, generateRandomItem, generateRG, generateBirthDate, selectRandomItemFromOptions } = require('../utils');
 const CustomerPageRepresentative = require('./CustomerPageRepresentative');
-const CustomerDataStore = require('../Helpers/customerDataStore');
+const CustomerDataStore = require('../Helpers/CustomerDataStore');
 
 class CustomerPage {
   constructor(page) {
     this.page = page;
     this.representativePage = new CustomerPageRepresentative(page);
   }
-
+  
   // Method for selection dropdowns
   async selectDropdownOption(fieldName, options) {
     // Select a random option from the array got by api 
     const randomOption = this.selectRandomItemFromOptions(options);
     console.log(`Selecting random option: ${randomOption} from ${fieldName} dropdown`);
+  
 
     // Find the form or container for the representative
     const formContainer = await this.page.locator('form').filter({ hasText: 'Adicionar Representante' });
@@ -68,30 +69,36 @@ async selectCapacityDropdownOption(capacity = null) {
 }
 
   async fillCustomerForm() {
+    // Generators
     const firstName = faker.person.firstName();
     const lastName = faker.person.lastName();
     const rg = generateRG();
     const cpf = fakerbr.br.cpf();
+    const birthDate = generateBirthDate();
 
-    // Text Fields 
+    // Text Fields Fills 
     await this.page.fill('input[name="name"]', firstName);
     await this.page.fill('input[name="last_name"]', lastName);
     await this.page.fill('input[name="rg"]', rg);
     await this.page.fill('input[name="cpf"]', cpf);
     
     // DropDowns and Special Fields
-    await this.page.getByRole('textbox', { name: 'DD/MM/YYYY' }).fill(generateBirthDate());
-    await this.selectDropdownOption('nationality', ['Brasileiro', 'Estrangeiro']);
-    await this.selectDropdownOption('gender', ['Masculino', 'Feminino']);
-    await this.selectDropdownOption('civil_status', ['Solteiro', 'Casado', 'Divorciado', 'Viúvo', 'União Estável']);    
-    
+    await this.page.getByRole('textbox', { name: 'DD/MM/YYYY' }).fill(birthDate); 
+    const nationality = await this.selectDropdownOption('nationality', ['Brasileiro', 'Estrangeiro']);
+    const gender = await this.selectDropdownOption('gender', ['Masculino', 'Feminino']);
+    const civilStatus = await this.selectDropdownOption('civil_status', ['Solteiro', 'Casado', 'Divorciado', 'Viúvo', 'União Estável']);
+
     // Store Data for Backend and Document Checking
     // TD: Keep the method with the remaining fields
     CustomerDataStore.set('firstName', firstName);
     CustomerDataStore.set('lastName', lastName);
     CustomerDataStore.set('rg', rg);
     CustomerDataStore.set('cpf', cpf);
-    
+    CustomerDataStore.set('nationality', nationality);
+    CustomerDataStore.set('gender', gender);
+    CustomerDataStore.set('civilStatus', civilStatus);
+    CustomerDataStore.set('birthDate', birthDate);
+
     const selectedCapacity = await this.selectCapacityDropdownOption();
     console.log(`Selected capacity: ${selectedCapacity}`);
 

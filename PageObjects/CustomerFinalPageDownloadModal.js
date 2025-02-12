@@ -1,5 +1,4 @@
 // CustomerFinalPageDownloadModal.js
-const assert = require('assert');
 const path = require('path');
 
 class DownloadModal {

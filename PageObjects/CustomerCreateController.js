@@ -5,6 +5,8 @@ const CustomerContactPage = require('./CustomerContactPage');
 const CustomerBankDetails = require('./CustomerBankDetails');
 const CustomerAdditionalInfoPage = require('./CustomerAdditionalInfoPage');
 const CustomerFinalPage = require('./CustomerFinalPage');
+const CustomerFinalVerify = require('./CustomerFinalVerify');
+
 
 class CustomerCreateController {
   constructor(page) {
@@ -17,18 +19,26 @@ class CustomerCreateController {
     this.customerFinal = new CustomerFinalPage(page);
   }
 
-  async createCustomer(capacity=null) {
+  async createCustomer(capacity) {
     await this.fillCustomerForm(capacity);
     await this.fillCustomerAddress();
     await this.fillContactInfo();
     await this.fillBankDetails();
     await this.fillAdditionalInfo();
     await this.completeFinalStep();
+
+    // Verification Methods
+    console.log('Starting final verification...');
+    const verificationResult = await CustomerFinalVerify.verifyCustomerData();
+    console.log('Final verification completed.');
+    console.log('Verification Result:', JSON.stringify(verificationResult, null, 2));
+
+    return verificationResult;
   }
 
-  async fillCustomerForm() {
+  async fillCustomerForm(capacity) {
     await this.page.waitForTimeout(1000);
-    await this.customerPage.fillCustomerForm();
+    await this.customerPage.fillCustomerForm(capacity);
   }
 
   async fillCustomerAddress() {

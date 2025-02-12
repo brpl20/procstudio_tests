@@ -1,12 +1,26 @@
 // Helpers/CustomerBackendValidator.js
-const ApiRequests = require('../ApiRequests/api-requests');
+const apiRequests = require('../ApiRequests/api-requests');
 const CustomerDataStore = require('./CustomerDataStore');
 
 class CustomerBackendValidator {
   async validateCustomerData() {
     const frontendData = CustomerDataStore.getAll();
-    const customers = await ApiRequests.fetchCustomers();
-    const lastCustomer = customers[customers.length - 1];
+    console.log("FRONTENDDDDDD")
+    console.log(frontendData);
+
+    console.log("BACKEND")
+    const customers = await apiRequests.fetchProfileCustomers();
+    const customers_data = customers.data;
+    const lastCustomer = customers_data[customers_data.length - 1];
+    console.log(customers_data)
+    console.log("------")
+    console.log("lastCustomer")
+
+    console.log('Frontend Data:');
+    console.log(JSON.stringify(frontendData, null, 2));
+
+    console.log('Backend Data (Last Customer):');
+    console.log(JSON.stringify(lastCustomer, null, 2));
 
     const comparisonResults = {};
 

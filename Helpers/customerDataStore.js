@@ -1,5 +1,4 @@
 // Helpers/customerDataStore.js
-
 class CustomerDataStore {
     constructor() {
       this.data = {};

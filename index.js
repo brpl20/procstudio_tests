@@ -19,9 +19,10 @@ const CustomerPageRepresentative = require('./PageObjects/CustomerPageRepresenta
 
 async function initializeApp() {
   try {
-    await apiRequests.login(config.LOGIN_EMAIL, config.LOGIN_PASSWORD);
+    // await apiRequests.login(config.LOGIN_EMAIL, config.LOGIN_PASSWORD);
     const profile_customers = await apiRequests.fetchProfileCustomers();
-    console.log("Api Request Ok - Customers");
+    
+    // console.log("Api Request Ok - Customers");
 
     console.log(profile_customers.data);
     const representatives = profile_customers.data
@@ -64,7 +65,7 @@ async function runTest(customerType, capacity) {
     await landingPage.navigateToLogin();
 
     const loginPage = new LoginPage(page);
-    await loginPage.login(config.LOGIN_EMAIL, config.LOGIN_PASSWORD);
+    await loginPage.login(config.LOGIN_EMAIL_FRONTEND, config.LOGIN_PASSWORD_FRONTEND);
 
     const customerIndexPage = new CustomerIndexPage(page);
 
