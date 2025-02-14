@@ -47,6 +47,7 @@ class CustomerCreateController {
 
   async fillContactInfo() {
     await this.customerContactPage.fillContactInfo();
+    await this.customerContactPage.handleAddButtons();
   }
 
   async fillBankDetails() {
