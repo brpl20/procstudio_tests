@@ -1,6 +1,6 @@
 // PageObjects/CustomerCompanyCreateController.js
 const { findFillableFormElements } = require('../Helpers/formHelper');
-const CustomerCompanyPage = require('./CustomerCompanyPage');
+const CustomerCompanyPage = require('../PageObjects/CustomerCompanyPage');
 
 class CustomerCompanyCreateController {
   constructor(page) {

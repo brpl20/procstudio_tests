@@ -1,11 +1,11 @@
 // PageObjects/CustomerCreateController.js
-const CustomerPage = require('./CustomerPage');
-const CustomerPageAddress = require('./CustomerPageAddress');
-const CustomerContactPage = require('./CustomerContactPage');
-const CustomerBankDetails = require('./CustomerBankDetails');
-const CustomerAdditionalInfoPage = require('./CustomerAdditionalInfoPage');
-const CustomerFinalPage = require('./CustomerFinalPage');
-const CustomerFinalVerify = require('./CustomerFinalVerify');
+const CustomerPage = require('../PageObjects/CustomerPage');
+const CustomerPageAddress = require('../PageObjects/CustomerPageAddress');
+const CustomerContactPage = require('../PageObjects/CustomerContactPage');
+const CustomerBankDetails = require('../PageObjects/CustomerBankDetails');
+const CustomerAdditionalInfoPage = require('../PageObjects/CustomerAdditionalInfoPage');
+const CustomerFinalPage = require('../PageObjects/CustomerFinalPage');
+const CustomerFinalVerify = require('../PageObjects/CustomerFinalVerify');
 
 
 class CustomerCreateController {
@@ -47,7 +47,6 @@ class CustomerCreateController {
 
   async fillContactInfo() {
     await this.customerContactPage.fillContactInfo();
-    await this.customerContactPage.clickNextButton();
   }
 
   async fillBankDetails() {

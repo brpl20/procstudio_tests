@@ -65,7 +65,31 @@ class ApiRequests {
     }
   }
 
-  
+  // Add these methods to your ApiRequests class
+
+  async fetchSpecificCustomer(customerId) {
+    await this.ensureAuthenticated();
+    try {
+      const response = await this.api.get(`/customers/${customerId}`);
+      console.log(`Fetched specific customer: ${customerId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to fetch specific customer ${customerId}:`, error.response ? error.response.data : error.message);
+      throw error;
+    }
+  }
+
+  async fetchProfileCustomer(profileCustomerId) {
+    await this.ensureAuthenticated();
+    try {
+      const response = await this.api.get(`/profile_customers/${profileCustomerId}`);
+      console.log(`Fetched profile customer: ${profileCustomerId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Failed to fetch profile customer ${profileCustomerId}:`, error.response ? error.response.data : error.message);
+      throw error;
+    }
+  }
 
   async fetchJobs() {
     await this.ensureAuthenticated();

@@ -1,5 +1,5 @@
 // PageObjects/UserCreatePage.js
-const { faker, fakerbr, generateRG } = require('../utils');
+// const { faker, fakerbr, generateRG } = require('../utils');
 
 class UserCreatePage {
   constructor(page) {

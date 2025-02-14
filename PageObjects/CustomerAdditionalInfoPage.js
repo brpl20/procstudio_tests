@@ -1,81 +1,6 @@
 // PageObjects/CustomerAdditionalInfoPage.js
-const { faker, fakerbr } = require('../utils');
-
-
-async function testSelectors(page) {
-  const elements = [
-    {
-      name: 'Profession Input',
-      selectors: [
-        { name: 'ID', selector: '#outlined-profession' },
-        { name: 'Name attribute', selector: 'input[name="profession"]' },
-        { name: 'Placeholder', selector: 'input[placeholder="Informe o Profissão"]' },
-      ]
-    },
-    {
-      name: 'Company Input',
-      selectors: [
-        { name: 'ID', selector: '#outlined-company' },
-        { name: 'Name attribute', selector: 'input[name="company"]' },
-        { name: 'Placeholder', selector: 'input[placeholder="Informe o Empresa Atual"]' },
-      ]
-    },
-    {
-      name: 'Benefit Number Input',
-      selectors: [
-        { name: 'ID', selector: '#outlined-number_benefit' },
-        { name: 'Name attribute', selector: 'input[name="number_benefit"]' },
-        { name: 'Placeholder', selector: 'input[placeholder="Informe o Número de Benefício"]' },
-      ]
-    },
-    {
-      name: 'NIT Input',
-      selectors: [
-        { name: 'ID', selector: '#outlined-nit' },
-        { name: 'Name attribute', selector: 'input[name="nit"]' },
-        { name: 'Placeholder', selector: 'input[placeholder="Informe o NIT"]' },
-      ]
-    },
-    {
-      name: 'Mother Name Input',
-      selectors: [
-        { name: 'ID', selector: '#outlined-mother_name' },
-        { name: 'Name attribute', selector: 'input[name="mother_name"]' },
-        { name: 'Placeholder', selector: 'input[placeholder="Informe o Nome da Mãe"]' },
-      ]
-    },
-    {
-      name: 'Password Input',
-      selectors: [
-        { name: 'ID', selector: '#outlined-inss_password' },
-        { name: 'Name attribute', selector: 'input[name="inss_password"]' },
-        { name: 'Placeholder', selector: 'input[placeholder="Informe o Senha do meu INSS"]' },
-      ]
-    }
-  ];
-
-  for (const element of elements) {
-    console.log(`Testing selectors for ${element.name}:`);
-    for (const { name, selector } of element.selectors) {
-      try {
-        const elementHandle = await page.locator(selector).first();
-        const isVisible = await elementHandle.isVisible();
-        console.log(`  ${name} selector: ${selector}`);
-        console.log(`    Element found: ${isVisible ? 'Yes (Visible)' : 'Yes (Not visible)'}`);
-        
-        if (isVisible) {
-          const value = await elementHandle.inputValue();
-          console.log(`    Current value: "${value}"`);
-        }
-      } catch (error) {
-        console.log(`  ${name} selector: ${selector}`);
-        console.log(`    Element not found. Error: ${error.message}`);
-      }
-      console.log('  ---');
-    }
-    console.log('\n');
-  }
-}
+const { customFaker } = require('../Utils/utils');
+const CustomerDataStore = require('../Helpers/CustomerDataStore');
 
 class CustomerAdditionalInfoPage {
   constructor(page) {
@@ -83,36 +8,38 @@ class CustomerAdditionalInfoPage {
   }
 
   async fillProfession() {
+    const profession = customFaker.jobTitle();
     const professionInput = await this.page.locator('#outlined-profession');
-    await professionInput.fill(faker.person.jobTitle());
+    await professionInput.fill(profession);
+    CustomerDataStore.set('profession', profession);
   }
 
   async fillCompany() {
+    const company = customFaker.generateCompanyName();
     const companyInput = await this.page.locator('#outlined-company');
-    await companyInput.fill(faker.company.name());
+    await companyInput.fill(company);
+    CustomerDataStore.set('company', company);
   }
 
   async fillBenefitNumber() {
+    const benefitNumber = customFaker.generateBenefitNumber();
     const benefitInput = await this.page.locator('#outlined-number_benefit');
-    const benefitNumber = faker.string.numeric('###') + '.' + 
-                          faker.string.numeric('###') + '.' + 
-                          faker.string.numeric('###') + '-' + 
-                          faker.string.numeric('#');
     await benefitInput.fill(benefitNumber);
+    CustomerDataStore.set('benefitNumber', benefitNumber);
   }
 
   async fillNIT() {
+    const nit = customFaker.generateNIT();
     const nitInput = await this.page.locator('#outlined-nit');
-    const nit = faker.string.numeric('###') + '.' + 
-                faker.string.numeric('#####') + '.' + 
-                faker.string.numeric('##') + '-' + 
-                faker.string.numeric('#');
     await nitInput.fill(nit);
+    CustomerDataStore.set('nit', nit);
   }
 
   async fillMotherName() {
+    const motherName = customFaker.generateMotherName();
     const motherNameInput = await this.page.locator('#outlined-mother_name');
-    await motherNameInput.fill(faker.person.fullName({ sex: 'female' }));
+    await motherNameInput.fill(motherName);
+    CustomerDataStore.set('motherName', motherName);
   }
 
   async fillPassword() {
@@ -121,9 +48,6 @@ class CustomerAdditionalInfoPage {
       'input[name="inss_password"]',
       'input[placeholder="Informe o Senha do meu INSS"]',
     ];
-
-
-  // <input aria-invalid="false" autocomplete="off" id="outlined-inss_password" name="inss_password" placeholder="Informe o Senha do meu INSS" type="text" class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall mui-style-1o6z5ng" value=""></input>
 
     let passwordInput;
     for (const selector of passwordSelectors) {
@@ -138,17 +62,13 @@ class CustomerAdditionalInfoPage {
       return;
     }
 
-    const password = faker.internet.password({ length: 12, memorable: false, pattern: /[A-Z]/ }) + 
-                     faker.string.numeric('#') + 
-                     faker.string.symbol();
+    const password = customFaker.generatePassword();
     await passwordInput.fill(password);
+    CustomerDataStore.set('password', password);
     console.log(`Password: ${password}`);
   }
 
   async fillAdditionalInfo() {
-    console.log("Testing selectors before filling additional info:");
-    await testSelectors(this.page);
-
     await this.fillProfession();
     await this.fillCompany();
     await this.fillBenefitNumber();
@@ -159,6 +79,15 @@ class CustomerAdditionalInfoPage {
 
     // Click Próximo button (assuming it exists on this page as well)
     await this.page.getByRole('button', { name: 'Próximo' }).click();
+
+    return {
+      profession: CustomerDataStore.get('profession'),
+      company: CustomerDataStore.get('company'),
+      benefitNumber: CustomerDataStore.get('benefitNumber'),
+      nit: CustomerDataStore.get('nit'),
+      motherName: CustomerDataStore.get('motherName'),
+      password: CustomerDataStore.get('password')
+    };
   }
 }
 

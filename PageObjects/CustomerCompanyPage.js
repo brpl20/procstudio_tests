@@ -1,5 +1,5 @@
 // PageObjects/CustomerCompanyPage.js
-const { faker, fakerbr } = require('../utils');
+const { faker, fakerbr } = require('../Utils/utils');
 const { findFillableFormElements } = require('../Helpers/formHelper');
 const CustomerPageRepresentative = require('./CustomerPageRepresentative');
 

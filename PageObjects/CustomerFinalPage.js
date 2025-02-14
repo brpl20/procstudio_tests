@@ -1,5 +1,5 @@
 // PageObjects/CustomerFinalPage.js
-const { faker, fakerbr } = require('../utils');
+const { faker, fakerbr } = require('../Utils/utils');
 const path = require('path');
 const DownloadModal = require('./CustomerFinalPageDownloadModal');
 

@@ -1,8 +1,7 @@
 // PageObjects/CustomerPageRepresentative.js
-const { faker, fakerbr, generateRG, generateRandomItem, generateBirthDate, selectRandomItemFromOptions } = require('../utils');
+const { customFaker, generateRandomItem, selectRandomItemFromOptions } = require('../Utils/utils');
 const { getRepresentativeNames } = require('../ApiRequests/representativeStore');
-const { findFillableFormElements } = require('../Helpers/formHelper');
-
+const CustomerDataStore = require('../Helpers/CustomerDataStore');
 
 class CustomerPageRepresentative {
   constructor(page) {
@@ -23,10 +22,8 @@ class CustomerPageRepresentative {
   async selectExistingRepresentative() {
     console.log('Selecting an existing representative...');
     const representativeNames = getRepresentativeNames();
-    console.log("Teste ==>");
-    console.log(representativeNames);
     const randomName = this.getRandomItem(representativeNames);
-    console.log(randomName);
+    console.log(`Selected name: ${randomName}`);
     await this.page.fill('#multiple-limit-tags', randomName);
     await this.page.press('#multiple-limit-tags', 'Enter');
     
@@ -41,103 +38,113 @@ class CustomerPageRepresentative {
     await this.page.click('.MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root');
     
     console.log(`Selected existing representative: ${randomName}`);
+    CustomerDataStore.set('representativeName', randomName);
   }
 
-    // TD: Fix Select Representative for Company
-    // TD: Selectors not working
-    // 
-    // Company: <input aria-invalid="false" autocomplete="off" id=":r5g:" placeholder="Selecione um Representante" type="text" class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused mui-style-b52kj1" aria-autocomplete="list" aria-expanded="false" autocapitalize="none" spellcheck="false" role="combobox" value=""></input>
-    // Person:  <input aria-invalid="true" autocomplete="off" id="multiple-limit-tags" placeholder="Informe o Representante" type="text" class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall MuiInputBase-inputAdornedEnd MuiAutocomplete-input MuiAutocomplete-inputFocused mui-style-b52kj1" aria-autocomplete="list" aria-expanded="false" autocapitalize="none" spellcheck="false" role="combobox" value=""></input>
   async selectExistingRepresentativeCompany() {
     console.log('Selecting an existing representative company...');
     const representativeNames = getRepresentativeNames();
     const randomName = this.getRandomItem(representativeNames);
-    console.log(randomName);
+    console.log(`Selected company: ${randomName}`);
 
-    const inputSelector = await this.page.getByRole('combobox', { name: 'Selecione um Representante' }).click();
-    const isInputVisible = await this.page.isVisible(inputSelector);
-    if (!isInputVisible) {
-      throw new Error(`Input selector ${inputSelector} is not visible`);
-    }
-    // Wait for the input field to be visible and interactable
-    // await this.page.waitForSelector(inputSelector, { state: 'visible' });
-  
-    // // Click the input field to focus it
-    // await this.page.click(inputSelector);
-  
-    // Type the random name into the input field
-    await this.page.fill(inputSelector, randomName);
-  
-    // Wait a moment for the dropdown to appear
+    const inputSelector = await this.page.getByRole('combobox', { name: 'Selecione um Representante' });
+    await inputSelector.click();
+    await inputSelector.fill(randomName);
     await this.page.waitForTimeout(500);
+    await inputSelector.press('Enter');
   
-    // Press Enter to submit the input
-    await this.page.press(inputSelector, 'Enter');
-  
-    // Wait for and click the option with the random name
     const optionSelector = `[role="option"]:has-text("${randomName}")`;
     await this.page.waitForSelector(optionSelector, { state: 'visible' });
     await this.page.click(optionSelector);
   
-    // Check for and click the "Open" button if it exists
     const openButton = await this.page.$('button:has-text("Open")');
     if (openButton) {
       await openButton.click();
     }
   
     console.log(`Selected existing representative company: ${randomName}`);
+    CustomerDataStore.set('representativeCompany', randomName);
   }
-
 
   async createNewRepresentative() {
     console.log('Creating a new representative...');
-    
-    // Click the "Adicionar Representante" button
+
     await this.page.getByRole('button', { name: 'Adicionar Representante' }).click();
     
-    // Wait for the modal to appear
     const modal = await this.page.locator('form').filter({ hasText: 'Dados do Representante' });
     await modal.waitFor({ state: 'visible' });
 
-
     const saveButton1 = await this.page.getByText('Salvar');
 
-    await modal.getByPlaceholder('Informe o Nome do Representante').fill(faker.person.firstName());
-    await modal.getByPlaceholder('Informe o Sobrenome do Representante').fill(faker.person.lastName());
-    await modal.getByPlaceholder('Informe o CPF').fill(fakerbr.br.cpf());
-    await modal.getByPlaceholder('Informe o RG').fill(generateRG());
-    const birthDateRepresentative = generateBirthDate(18, 90);
-    await modal.getByPlaceholder('DD/MM/YYYY').fill(birthDateRepresentative);
-    await modal.getByPlaceholder('N.º').fill(faker.location.buildingNumber());
-    await modal.locator('#outlined-city').fill(faker.location.city());
-    await modal.locator('#outlined-neighborhood').fill(faker.location.county());
-    await modal.locator('#outlined-street').fill(faker.location.streetAddress());
-    await modal.locator('#outlined-description').fill(faker.lorem.words(3));
-    await modal.locator('#outlined-state').fill(faker.location.state());
-    await modal.locator('#outlined-profession').fill(faker.person.jobTitle());
-    await modal.getByPlaceholder('Informe o CEP').fill(fakerbr.address.zipCodeValid());
-    await modal.locator('#outlined-phone').fill(faker.string.numeric(10));
-    await modal.locator('#outlined-email').fill(faker.internet.email()); 
+    const firstName = customFaker.firstName();
+    const lastName = customFaker.lastName();
+    const cpf = customFaker.generateCPF();
+    const rg = customFaker.generateRG();
+    const birthDate = customFaker.generateBirthDate(0, 100);
+    const number = customFaker.buildingNumber();
+    const profession = customFaker.jobTitle();
+    const cep = customFaker.zipCode();
+    const phone = customFaker.generateCellPhoneNumber();
+    const email = customFaker.generateEmail();
+    const ceporVerify = await customFaker.getAddressByCepCorreio(cep)
+    console.log(ceporVerify);
 
-    // Dropdowns
-    await this.selectDropdownOption(modal, 'nationality', ['Brasileiro', 'Estrangeiro']);
-    await this.selectDropdownOption(modal, 'gender', ['Masculino', 'Feminino']);
-    await this.selectDropdownOption(modal, 'civil_status', ['Solteiro', 'Casado', 'Divorciado', 'Viúvo', 'União Estável']);
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await modal.getByPlaceholder('Informe o Nome do Representante').fill(firstName);
+    await modal.getByPlaceholder('Informe o Sobrenome do Representante').fill(lastName);
+    await modal.getByPlaceholder('Informe o CPF').fill(cpf);
+    await modal.getByPlaceholder('Informe o RG').fill(rg);
+    await modal.getByPlaceholder('DD/MM/YYYY').fill(birthDate);
+    await modal.getByPlaceholder('N.º').fill(number);
+    await modal.locator('#outlined-profession').fill(profession);
+    await modal.getByPlaceholder('Informe o CEP').fill(cep);
+    await modal.locator('#outlined-phone').fill(phone);
+    await modal.locator('#outlined-email').fill(email);
+
+    // Wait for CEP API response
+    await this.page.waitForTimeout(3000);
+
+    // Get and store address fields (filled by API)
+    const street = await modal.locator('#outlined-street').inputValue();
+    const neighborhood = await modal.locator('#outlined-neighborhood').inputValue();
+    const city = await modal.locator('#outlined-city').inputValue();
+    const state = await modal.locator('#outlined-state').inputValue();
+
+    const complement = customFaker.addressComplement();
+    await modal.locator('#outlined-description').fill(complement);
+
+    const nationality = await this.selectDropdownOption(modal, 'nationality', ['Brasileiro', 'Estrangeiro']);
+    const gender = await this.selectDropdownOption(modal, 'gender', ['Masculino', 'Feminino']);
+    const civilStatus = await this.selectDropdownOption(modal, 'civil_status', ['Solteiro', 'Casado', 'Divorciado', 'Viúvo', 'União Estável']);
     
-    // await modal.getByRole('button', { name: 'Salvar' }).click();
-    // await this.page.getByRole('button', { name: 'Próximo' }).click();
     await saveButton1.click();
 
-    // Wait for the modal to close
     await this.page.waitForSelector('form:has-text("Dados do Representante")', { state: 'hidden' });
 
     console.log('Representative created successfully');
-    
+
+    // Store data for verification (18 fields)
+    CustomerDataStore.set('representativeFirstName', firstName);
+    CustomerDataStore.set('representativeLastName', lastName);
+    CustomerDataStore.set('representativeCPF', cpf);
+    CustomerDataStore.set('representativeRG', rg);
+    CustomerDataStore.set('representativeBirthDate', birthDate);
+    CustomerDataStore.set('representativeNumber', number);
+    CustomerDataStore.set('representativeProfession', profession);
+    CustomerDataStore.set('representativeCEP', cep);
+    CustomerDataStore.set('representativePhone', phone);
+    CustomerDataStore.set('representativeEmail', email);
+    CustomerDataStore.set('representativeStreet', street);
+    CustomerDataStore.set('representativeNeighborhood', neighborhood);
+    CustomerDataStore.set('representativeCity', city);
+    CustomerDataStore.set('representativeState', state);
+    CustomerDataStore.set('representativeComplement', complement);
+    CustomerDataStore.set('representativeNationality', nationality);
+    CustomerDataStore.set('representativeGender', gender);
+    CustomerDataStore.set('representativeCivilStatus', civilStatus);
   }
 
   async selectDropdownOption(container, fieldName, options) {
-    const randomOption = options[Math.floor(Math.random() * options.length)];
+    const randomOption = generateRandomItem(options);
     console.log(`Selecting random option: ${randomOption} from ${fieldName} dropdown`);
 
     await container.locator(`#mui-component-select-${fieldName}`).click();
@@ -149,24 +156,8 @@ class CustomerPageRepresentative {
   }
 
   getRandomItem(array) {
-    return array[Math.floor(Math.random() * array.length)];
+    return generateRandomItem(array);
   }
-
-  // async initializeTests() {
-  //   await this.findFillableElements();
-  // }
-
-  // async findFillableElements() {
-  //   this.formElements = await findFillableFormElements(this.page);
-  //   console.log("Form elements found:", JSON.stringify(this.formElements, null, 2));
-  //   return this.formElements;
-  // }
-
-  // async checkAllFields() {
-  //   console.log("Form elements to check:", JSON.stringify(this.formElements, null, 2));
-  //   // Implement your checking logic here
-  // }
-
 }
 
 module.exports = CustomerPageRepresentative;

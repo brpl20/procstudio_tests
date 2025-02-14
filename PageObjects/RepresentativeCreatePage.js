@@ -1,5 +1,5 @@
 // PageObjects/RepresentativeCreatePage.js
-const { faker, fakerbr, generateRG } = require('../utils');
+// const { faker, fakerbr, generateRG } = require('../Utils/utils');
 const { getRepresentativeNames } = require('../ApiRequests/representativeStore');
 
 class RepresentativeCreatePage {

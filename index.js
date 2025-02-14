@@ -6,8 +6,8 @@ const { setRepresentativeNames } = require('./ApiRequests/representativeStore');
 const LandingPage = require('./PageObjects/LandingPage');
 const LoginPage = require('./PageObjects/LoginPage');
 const CustomerIndexPage = require('./PageObjects/CustomerIndexPage');
-const CustomerCreateController = require('./PageObjects/CustomerCreateController');
-const CustomerCompanyCreateController = require('./PageObjects/CustomerCompanyCreateController');
+const CustomerCreateController = require('./Controllers/CustomerCreateController');
+const CustomerCompanyCreateController = require('./Controllers/CustomerCompanyCreateController');
 const RepresentativeCreatePage = require('./PageObjects/RepresentativeCreatePage');
 
 // Import New Builders
