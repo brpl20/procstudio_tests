@@ -32,14 +32,16 @@ or:
 <!-- - Arrumar "Senha do INSS" -->
 <!-- - Aguardar alterações do front => `+` e `download` -->
 <!-- - Terminar Sistema: Helpers + API Requests para comparar Front com Back + Docs -->
-- Corrigir parâmetros;
-- Adicionar emails e telefones adicionais (+);
-- Aguardar autoatribuição do representante;
-- Adicionar parâmetro: IA ON/OFF;
+<!-- - Corrigir parâmetros; -->
+<!-- - Adicionar emails e telefones adicionais (+); -->
+<!-- - Aguardar autoatribuição do representante; -->
+- Desativar IA Methods;
 - Limpar Código + cl em geral;
 - Download direto da Aws => Pasta Downloads;
-- Adicionar mais tempo de espera para API do CEP; 
+- Mamoth => Ler o que foi baixado diretamente e não o da aws;
+<!-- - Adicionar mais tempo de espera para API do CEP;  -->
 - Atualizar e ajustar métodos novos: Contador / Escritório / Usuário / Representante (Direto)
+- Corrigir bug de selecionar o representante (nomes muito grandes não estão funcionando direito)
 
 # Fase 2
 - Ajustar Assertions;
@@ -51,3 +53,5 @@ or:
 # Aprendizados
 - Usar mais debugging do Playwright => `await this.page.pause(); // resume para continuar`
 - Aprender mais métodos de debugging
+
+

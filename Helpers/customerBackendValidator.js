@@ -1,4 +1,3 @@
-// Helpers/CustomerBackendValidator.js
 const apiRequests = require('../ApiRequests/api-requests');
 const CustomerDataStore = require('./CustomerDataStore');
 const fs = require('fs').promises;
@@ -39,6 +38,61 @@ class CustomerBackendValidator {
     };
   }
 
+  formatCEP(cep) {
+    if (!cep) return '';
+    const numericCEP = cep.replace(/\D/g, '');
+    return numericCEP.replace(/^(\d{5})(\d{3})$/, '$1-$2');
+  }
+
+  formatPhone(phone) {
+    if (!phone) return '';
+    const numericPhone = phone.replace(/\D/g, '');
+    if (numericPhone.length === 10) {
+      return numericPhone.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3');
+    }
+    return numericPhone.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+  }
+
+  comparePhoneNumbers(frontendPhones, backendPhones) {
+    try {
+      // Return false if either value is null/undefined
+      if (!frontendPhones || !backendPhones) return false;
+  
+      // Handle case where inputs are arrays
+      const frontendArray = Array.isArray(frontendPhones) ? frontendPhones : [frontendPhones];
+      const backendArray = Array.isArray(backendPhones) ? backendPhones : [backendPhones];
+  
+      // Format and sort phone numbers
+      const frontendFormatted = frontendArray.map(p => this.formatPhone(String(p))).sort();
+      const backendFormatted = backendArray.map(p => this.formatPhone(String(p))).sort();
+  
+      return JSON.stringify(frontendFormatted) === JSON.stringify(backendFormatted);
+    } catch (error) {
+      console.error('Error comparing phone numbers:', error);
+      return false;
+    }
+  }
+
+  compareEmails(frontendEmails, backendEmails) {
+    try {
+      // Return false if either value is null/undefined
+      if (!frontendEmails || !backendEmails) return false;
+  
+      // Handle case where inputs are arrays
+      const frontendArray = Array.isArray(frontendEmails) ? frontendEmails : [frontendEmails];
+      const backendArray = Array.isArray(backendEmails) ? backendEmails : [backendEmails];
+  
+      // Format and sort emails
+      const frontendFormatted = frontendArray.map(e => String(e).toLowerCase()).sort();
+      const backendFormatted = backendArray.map(e => String(e).toLowerCase()).sort();
+  
+      return JSON.stringify(frontendFormatted) === JSON.stringify(backendFormatted);
+    } catch (error) {
+      console.error('Error comparing emails:', error);
+      return false;
+    }
+  }
+
   async validateCustomerData() {
     console.log('Current working directory:', process.cwd());
     
@@ -66,6 +120,8 @@ class CustomerBackendValidator {
       representativeData = await apiRequests.fetchProfileCustomer(representativeId);
     }
 
+    // TD: Fix additional request to the backend for multiple phone numbers and emails
+
     // Prepare backend object for logging
     const backendObject = {
       customer: backendCustomer,
@@ -86,7 +142,6 @@ class CustomerBackendValidator {
     if (downloadedFilePath) {
       console.log(`File downloaded to: ${downloadedFilePath}`);
       const docText = await this.docxReader.readDocxFile(downloadedFilePath);
-
       // Analyze document content with OpenAI
       const analysisResult = await this.openAIHelper.analyzeDocContent(docText);
       console.log('Analysis Result:', analysisResult);
@@ -109,7 +164,6 @@ class CustomerBackendValidator {
 
   compareData(frontendData, backendCustomer, backendRepresentative) {
     const comparisonResults = {};
-
     for (const [key, frontendValue] of Object.entries(frontendData)) {
       let backendValue = this.getBackendValue(key, backendCustomer, backendRepresentative);
       
@@ -119,7 +173,6 @@ class CustomerBackendValidator {
         match: this.compareValues(key, frontendValue, backendValue)
       };
     }
-
     return comparisonResults;
   }
 
@@ -160,8 +213,12 @@ class CustomerBackendValidator {
         return customerAttributes.inss_password;
       case 'phoneNumber':
         return customerAttributes.default_phone;
+      case 'phoneNumbers':  // Added for multiple phones
+        return customerAttributes.phones?.join(',');
       case 'email':
         return customerAttributes.default_email;
+      case 'emails':  // Added for multiple emails
+        return customerAttributes.emails?.join(',');
       case 'cep':
         return customerAttributes.addresses[0]?.zip_code;
       case 'street':
@@ -231,11 +288,30 @@ class CustomerBackendValidator {
   compareValues(key, frontendValue, backendValue) {
     if (frontendValue === null || backendValue === null) return false;
 
-    // Handle translations
+    // Handle multiple phones and emails
+    if (key === 'phoneNumbers') {
+      return this.comparePhoneNumbers(frontendValue, backendValue);
+    }
+
+    if (key === 'emails') {
+      return this.compareEmails(frontendValue, backendValue);
+    }
+
+    // Handle translations for both customer and representative fields
     if (['gender', 'nationality', 'capacity', 'civilStatus', 'representativeGender', 'representativeNationality', 'representativeCivilStatus'].includes(key)) {
       const translationType = key.startsWith('representative') ? key.slice(13).toLowerCase() : key.toLowerCase();
       const translatedFrontend = this.getTranslation(translationType, frontendValue);
       return translatedFrontend === backendValue.toLowerCase();
+    }
+
+    // Handle CEP/ZIP formatting
+    if (key === 'cep' || key === 'representativeCEP') {
+      return this.formatCEP(frontendValue) === this.formatCEP(backendValue);
+    }
+
+    // Handle phone formatting
+    if (key === 'phoneNumber' || key === 'representativePhone') {
+      return this.formatPhone(frontendValue) === this.formatPhone(backendValue);
     }
 
     // Handle date comparison
@@ -249,11 +325,15 @@ class CustomerBackendValidator {
   }
 
   getTranslation(type, value) {
-    if (!this.translations[type]) {
+    // Normalize the type to match the translations object keys
+    const normalizedType = type === 'civilstatus' ? 'civilStatus' : type;
+  
+    if (!this.translations[normalizedType]) {
       console.warn(`No translations found for type: ${type}`);
       return value.toLowerCase();
     }
-    const translation = this.translations[type][value];
+    
+    const translation = this.translations[normalizedType][value];
     if (!translation) {
       console.warn(`No translation found for value: ${value} in type: ${type}`);
       return value.toLowerCase();

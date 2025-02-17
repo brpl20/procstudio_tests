@@ -40,7 +40,8 @@ class CustomerPage {
   }
 
   // Method for selection dropdowns of capacity
-  async selectCapacityDropdownOption(capacity = null) {
+  async selectCapacityDropdownOption(capacity) {
+    console.log('selectCapacityDropdownOption received capacity:', capacity);
     const options = ['Capaz', 'Relativamente Incapaz', 'Absolutamente Incapaz'];
 
     // Use the provided capacity or select a random one if not provided
@@ -68,7 +69,7 @@ class CustomerPage {
     return selectedOption;
   }
 
-  async fillCustomerForm() {
+  async fillCustomerForm(capacity) {
     // Generators
     const firstName = customFaker.firstName();
     const lastName = customFaker.lastName();
@@ -87,7 +88,7 @@ class CustomerPage {
     const nationality = await this.selectDropdownOption('nationality', ['Brasileiro', 'Estrangeiro']);
     const gender = await this.selectDropdownOption('gender', ['Masculino', 'Feminino']);
     const civilStatus = await this.selectDropdownOption('civil_status', ['Solteiro', 'Casado', 'Divorciado', 'Viúvo', 'União Estável']);
-    const selectedCapacity = await this.selectCapacityDropdownOption();
+    const selectedCapacity = await this.selectCapacityDropdownOption(capacity);
 
     // Store Data for Backend and Document Checking
     // TD: Keep the method with the remaining fields
@@ -104,9 +105,7 @@ class CustomerPage {
 
     if (selectedCapacity !== 'Capaz') {
       console.log('Adicionando Representante...');
-      await this.representativePage.createNewRepresentative()
-      // Remover quando o proprio representante for criado e escolhido automaticamente
-      await this.representativePage.selectExistingRepresentative();
+      await this.representativePage.selectOrCreateRepresentative()
       await this.page.getByRole('button', { name: 'Próximo' }).click();
     } else {
       console.log('Continuando sem representante...');

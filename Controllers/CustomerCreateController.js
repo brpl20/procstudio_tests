@@ -20,6 +20,7 @@ class CustomerCreateController {
   }
 
   async createCustomer(capacity) {
+    console.log('CustomerCreateController.createCustomer received capacity:', capacity);
     await this.fillCustomerForm(capacity);
     await this.fillCustomerAddress();
     await this.fillContactInfo();
@@ -30,8 +31,8 @@ class CustomerCreateController {
     // Verification Methods
     console.log('Starting final verification...');
     const verificationResult = await CustomerFinalVerify.verifyCustomerData();
-    console.log('Final verification completed.');
-    console.log('Verification Result:', JSON.stringify(verificationResult, null, 2));
+    // console.log('Final verification completed.');
+    // console.log('Verification Result:', JSON.stringify(verificationResult, null, 2));
 
     return verificationResult;
   }

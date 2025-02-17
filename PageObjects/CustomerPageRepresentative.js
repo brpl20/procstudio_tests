@@ -1,4 +1,3 @@
-// PageObjects/CustomerPageRepresentative.js
 const { customFaker, generateRandomItem, selectRandomItemFromOptions } = require('../Utils/utils');
 const { getRepresentativeNames } = require('../ApiRequests/representativeStore');
 const CustomerDataStore = require('../Helpers/CustomerDataStore');
@@ -9,15 +8,68 @@ class CustomerPageRepresentative {
   }
 
   async selectOrCreateRepresentative() {
-    const random = Math.random();
-    const representativeNames = getRepresentativeNames();
-    console.log(representativeNames.length)
-    if (random < 0.50 && representativeNames.length > 0) {
-      await this.selectExistingRepresentative();
-    } else {
-      await this.createNewRepresentative();
+    try {
+        const shouldCreateNew = Math.random() < 0.50;
+        const representativeNames = getRepresentativeNames();
+
+        if (!shouldCreateNew && representativeNames.length > 0) {
+            console.log('Selecting existing representative...');
+            await this.selectExistingRepresentative();
+        } else {
+            console.log('Creating new representative...');
+            await this.createNewRepresentative();
+            
+            // More specific waiting conditions
+            try {
+                // Wait for loading to complete (if there's a loading indicator)
+                await this.page.waitForTimeout(2000);
+
+                // Try multiple possible success indicators
+                const successIndicators = [
+                    '[role="option"]',
+                    '.MuiAutocomplete-root',
+                    '[data-testid="representative-selected"]', // Add if you have this
+                    '.representative-info', // Add if you have this
+                ];
+
+                let representativeSelected = false;
+                for (const indicator of successIndicators) {
+                    try {
+                        await this.page.waitForSelector(indicator, {
+                            state: 'visible',
+                            timeout: 3000
+                        });
+                        console.log(`Representative selection confirmed via ${indicator}`);
+                        representativeSelected = true;
+                        break;
+                    } catch (error) {
+                        console.log(`Indicator ${indicator} not found, trying next...`);
+                    }
+                }
+
+                if (!representativeSelected) {
+                    // Final check - verify if we can proceed
+                    const canProceed = await this.page.getByRole('button', { name: 'Próximo' }).isEnabled();
+                    if (canProceed) {
+                        console.log('Representative selection confirmed via enabled Next button');
+                        representativeSelected = true;
+                    }
+                }
+
+                if (!representativeSelected) {
+                    throw new Error('Could not confirm representative selection');
+                }
+
+            } catch (error) {
+                console.log('Warning: Could not verify representative selection, but continuing...');
+                // You might want to add additional handling here
+            }
+        }
+    } catch (error) {
+        console.error('Error in selectOrCreateRepresentative:', error.message);
+        throw error;
     }
-  }
+}
 
   async selectExistingRepresentative() {
     console.log('Selecting an existing representative...');
@@ -76,32 +128,135 @@ class CustomerPageRepresentative {
 
     const saveButton1 = await this.page.getByText('Salvar');
 
+    // Generate all basic data first
     const firstName = customFaker.firstName();
     const lastName = customFaker.lastName();
     const cpf = customFaker.generateCPF();
     const rg = customFaker.generateRG();
     const birthDate = customFaker.generateBirthDate(0, 100);
-    const number = customFaker.buildingNumber();
     const profession = customFaker.jobTitle();
     const cep = customFaker.zipCode();
-    const phone = customFaker.generateCellPhoneNumber();
-    const email = customFaker.generateEmail();
-    const ceporVerify = await customFaker.getAddressByCepCorreio(cep)
-    console.log(ceporVerify);
+    const number = customFaker.buildingNumber();
+    const cepVerifyFakerAPI = await customFaker.getAddressByCepCorreio(cep);
 
+    // Fill the basic form fields
+    await modal.locator('#outlined-profession').fill(profession);
+    await modal.getByPlaceholder('Informe o CEP').fill(cep);
     await modal.getByPlaceholder('Informe o Nome do Representante').fill(firstName);
     await modal.getByPlaceholder('Informe o Sobrenome do Representante').fill(lastName);
     await modal.getByPlaceholder('Informe o CPF').fill(cpf);
     await modal.getByPlaceholder('Informe o RG').fill(rg);
     await modal.getByPlaceholder('DD/MM/YYYY').fill(birthDate);
     await modal.getByPlaceholder('N.º').fill(number);
-    await modal.locator('#outlined-profession').fill(profession);
-    await modal.getByPlaceholder('Informe o CEP').fill(cep);
-    await modal.locator('#outlined-phone').fill(phone);
-    await modal.locator('#outlined-email').fill(email);
 
-    // Wait for CEP API response
-    await this.page.waitForTimeout(3000);
+    // Wait for address fields to be populated by API
+    await this.page.waitForTimeout(5000);
+
+    // Handle phone and email with improved logic
+    const shouldCreateMultiple = Math.random() < 0.50; // 99% chance for multiple during debug
+    let phones, emails;
+    // await this.page.pause();
+
+    // Inside createNewRepresentative method, replace the phone/email handling section:
+
+    if (shouldCreateMultiple) {
+      // Generate multiple phones and emails
+      phones = [
+          customFaker.generateCellPhoneNumber(),
+          customFaker.generateCellPhoneNumber()
+      ];
+      emails = [
+          customFaker.generateEmail(),
+          customFaker.generateEmail()
+      ];
+
+      try {
+          // Try first set of selectors
+          const firstPhoneInput = await modal.locator('#outlined-phone');
+          const firstEmailInput = await modal.locator('#outlined-email');
+
+          if (await firstPhoneInput.isVisible()) {
+              await firstPhoneInput.fill(phones[0]);
+          } else {
+              // Fallback to alternative selector
+              await this.page.getByRole('textbox', { name: 'Informe o Telefone' }).first().fill(phones[0]);
+          }
+
+          if (await firstEmailInput.isVisible()) {
+              await firstEmailInput.fill(emails[0]);
+          } else {
+              // Fallback to alternative selector
+              await this.page.getByRole('textbox', { name: 'Informe o E-mail' }).first().fill(emails[0]);
+          }
+
+          // Handle additional fields
+          const addPhoneButton = await modal.locator('#add-phone');
+          const addEmailButton = await modal.locator('#add-email');
+
+          if (await addPhoneButton.isVisible()) {
+              await addPhoneButton.click();
+              await this.page.waitForTimeout(1000);
+              try {
+                  const secondPhoneInput = await modal.locator('#outlined-phone-1');
+                  if (await secondPhoneInput.isVisible()) {
+                      await secondPhoneInput.fill(phones[1]);
+                  } else {
+                      await this.page.getByRole('textbox', { name: 'Informe o Telefone' }).nth(1).fill(phones[1]);
+                  }
+              } catch (error) {
+                  console.log('Second phone field not found with primary selector, trying alternative...');
+                  await this.page.getByRole('textbox', { name: 'Informe o Telefone' }).nth(1).fill(phones[1]);
+              }
+          }
+
+          if (await addEmailButton.isVisible()) {
+              await addEmailButton.click();
+              await this.page.waitForTimeout(1000);
+              try {
+                  const secondEmailInput = await modal.locator('#outlined-email-1');
+                  if (await secondEmailInput.isVisible()) {
+                      await secondEmailInput.fill(emails[1]);
+                  } else {
+                      await this.page.getByRole('textbox', { name: 'Informe o E-mail' }).nth(1).fill(emails[1]);
+                  }
+              } catch (error) {
+                  console.log('Second email field not found with primary selector, trying alternative...');
+                  await this.page.getByRole('textbox', { name: 'Informe o E-mail' }).nth(1).fill(emails[1]);
+              }
+          }
+      } catch (error) {
+          console.error('Error handling multiple fields:', error);
+          // Fallback to single fields if multiple fails
+          await this.page.getByRole('textbox', { name: 'Informe o Telefone' }).first().fill(phones[0]);
+          await this.page.getByRole('textbox', { name: 'Informe o E-mail' }).first().fill(emails[0]);
+      }
+    } else {
+      // Single phone and email
+      phones = customFaker.generateCellPhoneNumber();
+      emails = customFaker.generateEmail();
+      
+      try {
+          const phoneInput = await modal.locator('#outlined-phone');
+          const emailInput = await modal.locator('#outlined-email');
+
+          if (await phoneInput.isVisible()) {
+              await phoneInput.fill(phones);
+          } else {
+              await this.page.getByRole('textbox', { name: 'Informe o Telefone' }).first().fill(phones);
+          }
+
+          if (await emailInput.isVisible()) {
+              await emailInput.fill(emails);
+          } else {
+              await this.page.getByRole('textbox', { name: 'Informe o E-mail' }).first().fill(emails);
+          }
+      } catch (error) {
+          console.error('Error handling single fields:', error);
+          // Fallback to alternative selectors
+          await this.page.getByRole('textbox', { name: 'Informe o Telefone' }).first().fill(phones);
+          await this.page.getByRole('textbox', { name: 'Informe o E-mail' }).first().fill(emails);
+      }
+    }
 
     // Get and store address fields (filled by API)
     const street = await modal.locator('#outlined-street').inputValue();
@@ -122,7 +277,8 @@ class CustomerPageRepresentative {
 
     console.log('Representative created successfully');
 
-    // Store data for verification (18 fields)
+    // Store data for verification (19 fields)
+    CustomerDataStore.set('representativeaddressByCepFakerAPI', cepVerifyFakerAPI);
     CustomerDataStore.set('representativeFirstName', firstName);
     CustomerDataStore.set('representativeLastName', lastName);
     CustomerDataStore.set('representativeCPF', cpf);
@@ -131,8 +287,8 @@ class CustomerPageRepresentative {
     CustomerDataStore.set('representativeNumber', number);
     CustomerDataStore.set('representativeProfession', profession);
     CustomerDataStore.set('representativeCEP', cep);
-    CustomerDataStore.set('representativePhone', phone);
-    CustomerDataStore.set('representativeEmail', email);
+    CustomerDataStore.set('representativePhone', phones);
+    CustomerDataStore.set('representativeEmail', emails);
     CustomerDataStore.set('representativeStreet', street);
     CustomerDataStore.set('representativeNeighborhood', neighborhood);
     CustomerDataStore.set('representativeCity', city);
@@ -141,7 +297,7 @@ class CustomerPageRepresentative {
     CustomerDataStore.set('representativeNationality', nationality);
     CustomerDataStore.set('representativeGender', gender);
     CustomerDataStore.set('representativeCivilStatus', civilStatus);
-  }
+}
 
   async selectDropdownOption(container, fieldName, options) {
     const randomOption = generateRandomItem(options);

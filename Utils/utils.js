@@ -120,7 +120,15 @@ class CustomFaker extends FakerBase {
   }
 
   generateCellPhoneNumber(withPrefix = false, withMask = false) {
-    return this.cellPhone(withPrefix, withMask);
+    const ddd = this.fakerTraditional.number.int({ min: 11, max: 99 });
+    const middleSection = this.fakerTraditional.number.int({ min: 1000, max: 9999 }); // Force 4 digits
+    const finalSection = this.fakerTraditional.number.int({ min: 1000, max: 9999 });
+
+    if (withMask) {
+      return `${ddd}-${middleSection}-${finalSection}`;
+    }
+    
+    return `${ddd}${middleSection}${finalSection}`;
   }
 
   jobTitle() {

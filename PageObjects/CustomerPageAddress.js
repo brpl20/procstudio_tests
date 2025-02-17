@@ -14,24 +14,25 @@ class CustomerPageAddress {
     // Fill CEP
     const cepInput = await this.page.locator('#outlined-cep');
     await cepInput.fill(cep);
-    const ceporVerify = await customFaker.getAddressByCepCorreio(cep)
-    console.log(ceporVerify);
-    // Wait for 3 seconds for API response
-    await this.page.waitForTimeout(3000);
-  
+    const cepVerifyFakerAPI = await customFaker.getAddressByCepCorreio(cep)
+    await this.page.waitForTimeout(5000); 
+    // await expect(enderecoField).toHaveValue(/.+/); // Wait until it has any value
+    // await expect(estadoField).toHaveValue(/.+/);   // Wait until it has any value
+    // TD: Fix when proper testing suit is set up
     // Store CEP for later verification
-    CustomerDataStore.set('cep', cep);
-
+    
     // Get and store other address fields (filled by API)
     const street = await this.page.locator('#outlined-street').inputValue();
     const neighborhood = await this.page.locator('#outlined-neighborhood').inputValue();
     const city = await this.page.locator('#outlined-city').inputValue();
     const state = await this.page.locator('#outlined-state').inputValue();
-
+    
     CustomerDataStore.set('street', street);
     CustomerDataStore.set('neighborhood', neighborhood);
+    CustomerDataStore.set('cep', cep);
     CustomerDataStore.set('city', city);
     CustomerDataStore.set('state', state);
+    CustomerDataStore.set('addressByCepFakerAPI', cepVerifyFakerAPI);
 
     // Fill N.º (number)
     const number = customFaker.buildingNumber();

@@ -1,5 +1,5 @@
 const { chromium } = require('playwright');
-const yargs = require('yargs');
+const yargs = require('yargs/yargs')(process.argv.slice(2));
 const config = require('./config');
 const apiRequests = require('./ApiRequests/api-requests');
 const { setRepresentativeNames } = require('./ApiRequests/representativeStore');
@@ -24,7 +24,7 @@ async function initializeApp() {
     
     // console.log("Api Request Ok - Customers");
 
-    console.log(profile_customers.data);
+    // console.log(profile_customers.data);
     const representatives = profile_customers.data
       .filter(customer => customer.attributes.customer_type === "representative")
       .map(customer => ({
@@ -42,9 +42,9 @@ async function initializeApp() {
       throw new Error(errorMessage);
     }
 
-    console.log(representatives);
+    // console.log(representatives);
     const representativeNames = representatives.map(rep => rep.name);
-    console.log(representativeNames);
+    // console.log(representativeNames);
     setRepresentativeNames(representativeNames);
     return representatives;
   } catch (error) {
@@ -55,9 +55,7 @@ async function initializeApp() {
 
 async function runTest(customerType, capacity) {
   const browser = await chromium.launch({ headless: false });
-  const context = await browser.newContext({
-    downloadsPath: '/Users/brpl20/Downloads'
-  });
+  const context = await browser.newContext();
   const page = await context.newPage();
 
   try {
@@ -132,6 +130,7 @@ async function runTest(customerType, capacity) {
 
 // Parse command line arguments
 // TD: Argv pessoa fisica relativamente incaapz -> Não está funcionando -> Passa sem argumento e vai para o random 
+
 const argv = yargs
   .command('create', 'Create a new customer', {
     type: {
@@ -149,31 +148,31 @@ const argv = yargs
       demandOption: true
     },
     capacity: {
-      description: 'Specify the capacity of the customer (optional). Only relevant for "pessoaFisica". Use "random" for random selection.',
+      description: 'Capacity for pessoaFisica',
       alias: 'c',
-      default: null, // Default is null (not required)
+      type: 'string',
+      default: 'random',
       coerce: (value) => {
-        if (value === null || value === 'random') return null; // Allow null or "random"
-        if (['Capaz', 'Relativamente Incapaz', 'Absolutamente Incapaz'].includes(value)) return value;
-        throw new Error(`Invalid capacity value: ${value}`);
+        const validValues = ['random', 'Capaz', 'Relativamente Incapaz', 'Absolutamente Incapaz'];
+        if (!validValues.includes(value)) {
+          throw new Error(`Invalid capacity. Valid values are: ${validValues.join(', ')}`);
+        }
+        return value;
       }
     }
   })
-  .check((argv) => {
-    // Validate capacity only if type is pessoaFisica
-    if (argv.type === 'pessoaFisica' && argv.capacity === null) {
-      console.log('Capacity is required for pessoaFisica. Using random selection.');
-    } else if (argv.type !== 'pessoaFisica' && argv.capacity !== null) {
-      console.warn('Capacity is ignored for non-pessoaFisica types.');
-    }
-    return true; // Validation passes
-  })
+  .strict() // This will enforce strict command checking
+  .demandCommand(1, 'You need at least one command before moving on')
   .help()
   .alias('help', 'h')
-  .argv;
+  .parse();
 
-if (argv._.includes('create') && argv.type) {
-  runTest(argv.type, argv.capacity); // Pass the capacity argument to runTest
+// Add some debug logging
+console.log('Parsed arguments:', argv);
+
+if (argv._.includes('create')) {
+  console.log(`Creating ${argv.type} with capacity: ${argv.capacity}`);
+  runTest(argv.type, argv.capacity);
 } else {
   console.log('Please specify a valid command and customer type.');
   yargs.showHelp();

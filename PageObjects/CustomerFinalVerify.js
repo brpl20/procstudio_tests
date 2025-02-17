@@ -4,57 +4,76 @@ const CustomerBackendValidator = require('../Helpers/CustomerBackendValidator');
 
 class CustomerFinalVerify {
   async compareWithBackend() {
-    const comparisonResults = await CustomerBackendValidator.validateCustomerData();
-    
-    const summary = {
-      matchedFields: [],
-      mismatchedFields: [],
-      allFieldsMatch: true
-    };
+    try {
+      const comparisonResults = await CustomerBackendValidator.validateCustomerData();
+      
+      const summary = {
+        mismatchedFields: [],
+        allFieldsMatch: true
+      };
 
-    for (const [field, result] of Object.entries(comparisonResults)) {
-      if (result.match) {
-        summary.matchedFields.push(field);
-      } else {
-        summary.mismatchedFields.push({
-          field,
-          frontend: result.frontend,
-          backend: result.backend
-        });
-        summary.allFieldsMatch = false;
+      // Only collect mismatched fields
+      for (const [field, result] of Object.entries(comparisonResults)) {
+        if (!result.match) {
+          summary.mismatchedFields.push({
+            field,
+            frontend: result.frontend,
+            backend: result.backend
+          });
+          summary.allFieldsMatch = false;
+        }
       }
+
+      // Log full results to file but don't console.log them
+      return {
+        detailedComparison: comparisonResults,
+        summary: summary
+      };
+    } catch (error) {
+      console.error('Error during comparison:', error);
+      throw error;
     }
-
-    console.log('Comparison Results:');
-    console.log(JSON.stringify(comparisonResults, null, 2));
-
-    console.log('Summary:');
-    console.log(JSON.stringify(summary, null, 2));
-
-    return {
-      detailedComparison: comparisonResults,
-      summary: summary
-    };
   }
 
   async verifyCustomerData() {
-    const comparisonResult = await this.compareWithBackend();
-    
-    if (comparisonResult.summary.allFieldsMatch) {
-      console.log("All customer data fields match between frontend and backend.");
-    } else {
-      console.log("Mismatches found in customer data:");
-      comparisonResult.summary.mismatchedFields.forEach(mismatch => {
-        console.log(`Field: ${mismatch.field}`);
-        console.log(`  Frontend value: ${mismatch.frontend}`);
-        console.log(`  Backend value: ${mismatch.backend}`);
-      });
+    try {
+      const comparisonResult = await this.compareWithBackend();
+      
+      // Only show results if there are mismatches
+      if (comparisonResult.summary.allFieldsMatch) {
+        console.log("\n✅ All customer data fields match between frontend and backend.");
+      } else {
+        console.log("\n❌ Mismatches found in customer data:");
+        console.log("----------------------------------------");
+        
+        comparisonResult.summary.mismatchedFields.forEach(mismatch => {
+          console.log(`\nField: ${this.formatFieldName(mismatch.field)}`);
+          console.log(`Frontend: ${mismatch.frontend || 'undefined'}`);
+          console.log(`Backend:  ${mismatch.backend || 'undefined'}`);
+          console.log("----------------------------------------");
+        });
+
+        console.log(`\nTotal mismatches found: ${comparisonResult.summary.mismatchedFields.length}`);
+      }
+
+      return comparisonResult;
+    } catch (error) {
+      console.error('Error during verification:', error);
+      throw error;
     }
+  }
 
-    console.log('Frontend Data:');
-    console.log(JSON.stringify(CustomerDataStore.getAll(), null, 2));
-
-    return comparisonResult;
+  // Helper method to format field names for better readability
+  formatFieldName(field) {
+    return field
+      // Split on capital letters and underscores
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/_/g, ' ')
+      // Capitalize first letter and rest of the words
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ')
+      .trim();
   }
 }
 
