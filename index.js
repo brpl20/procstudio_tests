@@ -55,7 +55,9 @@ async function initializeApp() {
 
 async function runTest(customerType, capacity) {
   const browser = await chromium.launch({ headless: false });
-  const context = await browser.newContext();
+  const context = await browser.newContext({
+    downloadsPath: '/Users/brpl20/Downloads'
+  });
   const page = await context.newPage();
 
   try {

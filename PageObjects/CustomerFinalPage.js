@@ -109,7 +109,7 @@ class CustomerFinalPage {
     await this.page.waitForSelector('label:text("Finalizar Cadastro")');
     console.log("Confirmation modal appeared");
 
-    
+    this.waitForModal
 
     // Click the final save button
     const saveButton = await this.page.locator('button:has-text("Salvar")');
@@ -118,16 +118,11 @@ class CustomerFinalPage {
   }
 
   async handleDownloadModal() {
-    await this.downloadModal.waitForModal();
-    await this.downloadModal.testSelectors();
-    // await this.downloadModal.initiateDownload3(); // bugado ainda
+    await this.downloadModal.waitForModalAndDownload();
     await this.downloadModal.closeModal();
   }
 
   async completeFinalStep() {
-    console.log("Testing selectors before completing final step:");
-    // await testSelectors(this.page);
-
     await this.toggleGenerateDocuments();
     await this.clickFinishButton();
     await this.handleConfirmationModal();
