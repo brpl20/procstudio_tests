@@ -247,6 +247,29 @@ class CustomFaker extends FakerBase {
     return this.phone(false, false);
   }
 
+  // Company Methods - Pessoa Juridica
+
+  generateInscription() {
+    return this.fakerTraditional.string.numeric('############');
+  }
+  
+  generateOpenDate() {
+    const pastDate = this.fakerTraditional.date.past();
+    return pastDate.toLocaleDateString("pt-BR");
+  }
+  
+  generateActivity() {
+    return this.fakerTraditional.company.buzzPhrase();
+  }
+  
+  generateWebsite() {
+    return this.fakerTraditional.internet.url();
+  }
+  
+  generateFullEnterprise(activity = null) {
+    return this.fullEnterPrise(activity);
+  }
+
   async fillInputField(page, selector, value) {
     const input = await page.locator(selector);
     await input.fill(value);

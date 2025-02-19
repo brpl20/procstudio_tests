@@ -53,6 +53,8 @@ async function initializeApp() {
   }
 }
 
+// async function cleanUp()
+
 async function runTest(customerType, capacity) {
   const browser = await chromium.launch({ headless: false });
   const context = await browser.newContext();
@@ -127,9 +129,6 @@ async function runTest(customerType, capacity) {
     await browser.close();
   }
 }
-
-// Parse command line arguments
-// TD: Argv pessoa fisica relativamente incaapz -> Não está funcionando -> Passa sem argumento e vai para o random 
 
 const argv = yargs
   .command('create', 'Create a new customer', {

@@ -2,17 +2,17 @@ const apiRequests = require('../ApiRequests/api-requests');
 const CustomerDataStore = require('./CustomerDataStore');
 const fs = require('fs').promises;
 const path = require('path');
-const FileDownloader = require('./FileDownloaderFromAws');
-const DocxReader = require('./DocxReader');
-const OpenAIHelper = require('./OpenAIHelper');
+// const FileDownloader = require('./FileDownloaderFromAws'); // Método da AWS desativado por conta do Download Direto Deixei aqui caso seja importante no futuro
+// const DocxReader = require('./DocxReader');
+// const OpenAIHelper = require('./OpenAIHelper'); // Ativar este método se for necessário utilização de IA
 
 class CustomerBackendValidator {
   constructor() {
-    this.logDir = path.join(__dirname, 'logs');
-    this.downloadsDir = path.join(__dirname, 'downloads');
-    this.fileDownloader = new FileDownloader(this.downloadsDir);
-    this.docxReader = new DocxReader();
-    this.openAIHelper = new OpenAIHelper();
+    this.logDir = path.join(__dirname, '../../logs');
+    // this.downloadsDir = path.join(__dirname, 'downloads');
+    // this.fileDownloader = new FileDownloader(this.downloadsDir);
+    // this.docxReader = new DocxReader();
+    // this.openAIHelper = new OpenAIHelper();
     this.translations = {
       gender: {
         'Masculino': 'male',
@@ -137,15 +137,15 @@ class CustomerBackendValidator {
     // Log comparison results
     await this.logData('comparison.json', comparisonResults);
 
-    // Download customer file
-    const downloadedFilePath = await this.fileDownloader.downloadCustomerFile(backendCustomer.attributes.customer_files);
-    if (downloadedFilePath) {
-      console.log(`File downloaded to: ${downloadedFilePath}`);
-      const docText = await this.docxReader.readDocxFile(downloadedFilePath);
-      // Analyze document content with OpenAI
-      const analysisResult = await this.openAIHelper.analyzeDocContent(docText);
-      console.log('Analysis Result:', analysisResult);
-    }
+    // // Download customer file
+    // const downloadedFilePath = await this.fileDownloader.downloadCustomerFile(backendCustomer.attributes.customer_files);
+    // if (downloadedFilePath) {
+    //   console.log(`File downloaded to: ${downloadedFilePath}`);
+    //   const docText = await this.docxReader.readDocxFile(downloadedFilePath);
+    //   // Analyze document content with OpenAI
+    //   const analysisResult = await this.openAIHelper.analyzeDocContent(docText);
+    //   console.log('Analysis Result:', analysisResult);
+    // }
 
     return comparisonResults;
   }
