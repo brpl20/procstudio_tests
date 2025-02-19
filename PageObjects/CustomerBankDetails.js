@@ -9,11 +9,17 @@ class CustomerBankDetails {
 
   async selectRandomBank() {
     const bank = customFaker.selectRandomBank();
-    await this.page.locator('#multiple-limit-tags').click();
-    await this.page.keyboard.type(bank);
+    
+    // Click and fill the combobox
+    await this.page.getByRole('combobox', { name: 'Selecione um Banco' }).click();
+    await this.page.getByRole('combobox', { name: 'Selecione um Banco' }).fill(bank);
+    
+    // Wait for suggestions and press Enter
     await this.page.keyboard.press('Enter');
+    
+    // Store the selected bank
     CustomerDataStore.set('bank', bank);
-  }
+}
 
   async fillAgency() {
     const agency = customFaker.generateAgency();

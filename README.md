@@ -50,6 +50,8 @@ or:
 
 - [./PageObjects/CustomerPageAddress.js:21]     Fix when proper testing suit is set up
 - [./PageObjects/CustomerPage.js:94]     Keep the method with the remaining fields
+- [./PageObjects/CustomerCompanyPage.js:24]     Não adianta, as vees o CEP dá algum tipo de erro, ou não possui Bairro ou Endereço
+- [./PageObjects/CustomerCompanyPage.js:69]     Arrumar lógica aqui porque o método customer representative
 - [./PageObjects/CustomerFinalPage.js:89]     Implementar randomizacao no futuro 
 - [./index.js:96]         Corrigir as rotas para não ficar mudando depois entre staging e produção toda hora -- config routes? 
 - [./Helpers/customerBackendValidator.js:123]     Fix additional request to the backend for multiple phone numbers and emails

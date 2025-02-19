@@ -93,30 +93,30 @@ class CustomerPageRepresentative {
     CustomerDataStore.set('representativeName', randomName);
   }
 
-  async selectExistingRepresentativeCompany() {
-    console.log('Selecting an existing representative company...');
-    const representativeNames = getRepresentativeNames();
-    const randomName = this.getRandomItem(representativeNames);
-    console.log(`Selected company: ${randomName}`);
+//   async selectExistingRepresentativeCompany() {
+//     console.log('Selecting an existing representative company...');
+//     const representativeNames = getRepresentativeNames();
+//     const randomName = this.getRandomItem(representativeNames);
+//     console.log(`Selected company: ${randomName}`);
 
-    const inputSelector = await this.page.getByRole('combobox', { name: 'Selecione um Representante' });
-    await inputSelector.click();
-    await inputSelector.fill(randomName);
-    await this.page.waitForTimeout(500);
-    await inputSelector.press('Enter');
+//     const inputSelector = await this.page.getByRole('combobox', { name: 'Selecione um Representante' });
+//     await inputSelector.click();
+//     await inputSelector.fill(randomName);
+//     await this.page.waitForTimeout(500);
+//     await inputSelector.press('Enter');
   
-    const optionSelector = `[role="option"]:has-text("${randomName}")`;
-    await this.page.waitForSelector(optionSelector, { state: 'visible' });
-    await this.page.click(optionSelector);
+//     const optionSelector = `[role="option"]:has-text("${randomName}")`;
+//     await this.page.waitForSelector(optionSelector, { state: 'visible' });
+//     await this.page.click(optionSelector);
   
-    const openButton = await this.page.$('button:has-text("Open")');
-    if (openButton) {
-      await openButton.click();
-    }
+//     const openButton = await this.page.$('button:has-text("Open")');
+//     if (openButton) {
+//       await openButton.click();
+//     }
   
-    console.log(`Selected existing representative company: ${randomName}`);
-    CustomerDataStore.set('representativeCompany', randomName);
-  }
+//     console.log(`Selected existing representative company: ${randomName}`);
+//     CustomerDataStore.set('representativeCompany', randomName);
+//   }
 
   async createNewRepresentative() {
     console.log('Creating a new representative...');

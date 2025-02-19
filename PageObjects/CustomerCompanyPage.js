@@ -1,37 +1,120 @@
 // PageObjects/CustomerCompanyPage.js
-const { faker, fakerbr } = require('../Utils/utils');
-const { findFillableFormElements } = require('../Helpers/formHelper');
+const { customFaker } = require('../Utils/utils');
+const CustomerDataStore = require('../Helpers/CustomerDataStore');
+// const { findFillableFormElements } = require('../Helpers/formHelper');
 const CustomerPageRepresentative = require('./CustomerPageRepresentative');
+const CustomerBankDetails = require('./CustomerBankDetails');
 
 class CustomerCompanyPage {
   constructor(page) {
     this.page = page;
     this.representativePage = new CustomerPageRepresentative(page);
-  }
-
+    this.bankPage = new CustomerBankDetails(page);
+  }  
+  
   async fillCustomerCompanyForm() {
-    // Fill text inputs
-    await this.page.fill('input[name="name"]', faker.company.name());
-    await this.page.fill('input[name="cnpj"]', fakerbr.br.cnpj());
-    await this.page.fill('input[name="zip_code"]', faker.location.zipCode('#####-###'));
-    await this.page.fill('input[name="street"]', faker.location.street());
-    await this.page.fill('input[name="number"]', faker.number.int({ min: 1, max: 9999 }).toString());
-    await this.page.fill('input[name="description"]', faker.lorem.sentence());
-    await this.page.fill('input[name="neighborhood"]', faker.location.county());
-    await this.page.fill('input[name="city"]', faker.location.city());
-    await this.page.fill('input[name="state"]', faker.location.state());
+    
+    // Fill CEP using fakerbr and SuperFaker
+    const cep = customFaker.zipCode();
+    const cepInput = await this.page.locator('#outlined-cep');
+    await this.page.fill('input[name="zip_code"]', cep);
+    CustomerDataStore.set('cep', cep);
 
+
+    // TD: Não adianta, as vees o CEP dá algum tipo de erro, ou não possui Bairro ou Endereço
+    // Acredito que sejam os ceps "de cidade"
+    // Aqueles de cidades pequenas 
+    // Precisamos criar um failsafe para isso
+    // await cepInput.fill(cep);
+    const cepVerifyFakerAPI = await customFaker.getAddressByCepCorreio(cep)
+    await this.page.waitForTimeout(3000); 
+    
+    // Fill N.º (number)
+    const number = customFaker.buildingNumber();
+    // const numeroInput = await this.page.locator('#outlined-number');
+    await this.page.fill('input[name="number"]', number);
+    // await numeroInput.fill(number);
+    CustomerDataStore.set('number', number);
+  
+    // Fill Complemento
+    const complement = customFaker.addressComplement();
+    // const complementInput = await this.page.locator('#outlined-description');
+    // await complementInput.fill(complement);
+    await this.page.fill('input[name="description"]', complement);
+    CustomerDataStore.set('complement', complement);
+
+    // Company Inputs
+    const fakeCompany = customFaker.generateFullEnterprise(); 
+    const fakeCompanyName = fakeCompany.name;
+    const fakeCompanyCnpj = fakeCompany.cnpj;
+    
+    
+    await this.page.fill('input[name="name"]', fakeCompanyName);
+    await this.page.fill('input[name="cnpj"]', fakeCompanyCnpj);
+    
     console.log('Customer Company form filled successfully');
-
+    
     // Click the 'Next' button after filling the form
     await this.page.getByRole('button', { name: 'Próximo' }).click();
-    console.log('Clicked Next button');
+
+    
+    // Email and phone
+    // Não utilizei o mesmo método porque há diferença entre os formulários
+    const fakeCompanyEmail = fakeCompany.email;
+    const fakeCompanyPhone = customFaker.generateCellPhoneNumber(); // o metodo da empresa gera numeros maiores e invalidos
+    await this.page.getByRole('textbox', { name: 'Informe o Telefone' }).fill(fakeCompanyPhone);
+    await this.page.getByRole('textbox', { name: 'Informe o Email' }).fill(fakeCompanyEmail);
+
+    // Representative Add... 
+    // TD: Arrumar lógica aqui porque o método customer representative
+    // Está criando todo o método sem apertar no botão seguinte
+    // Também arrumar no Customer Create
+    // Manter sempre a mesma lógica em todo o sistema
     console.log('Adding a representative...');
-    await this.representativePage.createNewRepresentative()
-    await this.page.waitForTimeout(2000);
-    await this.representativePage.selectExistingRepresentativeCompany();
-    await this.page.waitForTimeout(2000);
-    await this.page.getByRole('button', { name: 'Próximo' }).click();
+    await this.representativePage.selectOrCreateRepresentative();
+
+    
+    await this.page.waitForLoadState('networkidle');
+
+    // Try to find and click the button
+    const button2 = await this.page.getByRole('button', { name: 'Próximo' });
+    try {
+        await button2.waitFor({ state: 'visible', timeout: 5000 });
+        await button2.evaluate(button => {
+            if (!button.disabled) {
+                button.click();
+            }
+        });
+        console.log('Button clicked via evaluate');
+    } catch (error) {
+        console.error('Failed to click button:', error);
+    }
+
+
+
+    // Wait for navigation or state change after clicking
+    // Choose the most appropriate wait condition for your case:
+    // await this.page.waitForLoadState('networkidle'); // Wait for network requests to complete
+    
+    // Fill Bank Details
+    console.log('Adding a Bank Details... fixed');
+    await this.bankPage.fillBankDetails()
+    
+    // Finalizando 
+    await this.page.getByRole('button', { name: 'Finalizar' }).click();
+    
+    // await this.page.pause();
+
+    // Wait for modal to appear and become stable
+    await this.page.waitForLoadState('networkidle');
+
+    // Find and click the save button
+    const saveButton = await this.page.getByRole('button', { name: 'Salvar' });
+    await saveButton.waitFor({ state: 'visible' });
+    await saveButton.click();
+
+
+
   }
 
   async selectDropdownOption(fieldName, options) {
