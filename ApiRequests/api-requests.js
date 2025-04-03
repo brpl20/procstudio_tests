@@ -44,6 +44,7 @@ class ApiRequests {
     try {
       const response = await this.api.get('/customers');
       console.log('Fetched customers:', response.data.length);
+      console.log('Fetched customers:', response.data);
       return response.data;
     } catch (error) {
       console.error('Failed to fetch customers:', error.response ? error.response.data : error.message);
@@ -56,6 +57,7 @@ class ApiRequests {
       await this.ensureAuthenticated();
       const response = await this.api.get('/profile_customers');
       console.log('Fetched profile customers:', response.data.length);
+      console.log('Fetched profile customers:', response.data);
       return response.data;
     } catch (error) {
       console.error('Failed to fetch profile customers:', error.response ? error.response.data : error.message);
@@ -70,7 +72,7 @@ class ApiRequests {
   async fetchSpecificCustomer(customerId) {
     await this.ensureAuthenticated();
     try {
-      const response = await this.api.get(`/customers/${customerId}`);
+      const response = await this.api.get(`/profile_customers/${customerId}`);
       console.log(`Fetched specific customer: ${customerId}`);
       return response.data;
     } catch (error) {

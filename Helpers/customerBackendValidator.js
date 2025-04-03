@@ -97,19 +97,22 @@ class CustomerBackendValidator {
     console.log('Current working directory:', process.cwd());
     
     const frontendData = CustomerDataStore.getAll();
+    console.log("Frontend Data:");
+    console.log(frontendData);
     
     // Fetch backend data
     const customers = await apiRequests.fetchProfileCustomers();
     const lastCustomer = customers.data[customers.data.length - 1];
-    
+    console.log("Lengh Last");
+    console.log(lastCustomer);
     // Fetch specific customer data
     const customerId = lastCustomer.id;
-    const specificCustomer = await apiRequests.fetchSpecificCustomer(customerId);
+    console.log("Customer ID:", customerId);
+    // const specificCustomer = await apiRequests.fetchSpecificCustomer(customerId);
     const profileCustomer = await apiRequests.fetchProfileCustomer(customerId);
     
     // Combine specific customer and profile customer data
     const backendCustomer = {
-      ...specificCustomer.data,
       ...profileCustomer.data
     };
 

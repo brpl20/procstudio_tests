@@ -7,7 +7,7 @@ class CustomerContactPage {
     this.page = page;
   }
 
-  async waitForElement(selector, timeout = 5000) {
+  async waitForElement(selector, timeout = 1000) {
     try {
       await this.page.waitForSelector(selector, { 
         state: 'visible',
@@ -69,7 +69,7 @@ class CustomerContactPage {
     
     // Wait for both email inputs to be visible
     await this.waitForElement('[name="Insira um e-mail"]');
-    await this.page.waitForTimeout(1000); // Small delay to ensure both fields are ready
+    await this.page.waitForTimeout(500); // Small delay to ensure both fields are ready
     
     await this.page.getByRole('textbox', { name: 'Insira um e-mail' }).first().fill(emails[0]);
     await this.page.getByRole('textbox', { name: 'Insira um e-mail' }).nth(1).fill(emails[1]);
