@@ -21,8 +21,6 @@ async function initializeApp() {
   try {
     // await apiRequests.login(config.LOGIN_EMAIL, config.LOGIN_PASSWORD);
     const profile_customers = await apiRequests.fetchProfileCustomers();
-    
-    // console.log("Api Request Ok - Customers");
 
     // console.log(profile_customers.data);
     const representatives = profile_customers.data
