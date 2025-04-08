@@ -104,6 +104,18 @@ class ApiRequests {
       throw error;
     }
   }
+
+  async fetchWorks() {
+    await this.ensureAuthenticated();
+    try {
+      const response = await this.api.get('/works');
+      console.log('Fetched works:', response.data.length);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch works:', error.response ? error.response.data : error.message);
+      throw error;
+    }
+  }
 }
 
 module.exports = new ApiRequests();
