@@ -9,6 +9,7 @@ const CustomerIndexPage = require('./PageObjects/CustomerIndexPage');
 const CustomerCreateController = require('./Controllers/CustomerCreateController');
 const CustomerCompanyCreateController = require('./Controllers/CustomerCompanyCreateController');
 const RepresentativeCreatePage = require('./PageObjects/RepresentativeCreatePage');
+const ViewCustomers = require('./ViewTests/ViewCustomers'); // Added import for ViewCustomers
 
 // Import New Builders
 const AccountantCreate = require('./PageObjects/AccountantCreate');
@@ -35,23 +36,76 @@ async function initializeApp() {
 
     // Check if representatives is an array and not empty
     if (!Array.isArray(representatives) || representatives.length === 0) {
-      const errorMessage = "Objeto diferente de um array ou array vazio, por favor verifique se há um representante cadastrado ou se houve um erro na api ou no método de filtragem de dados";
-      console.error(errorMessage);
-      throw new Error(errorMessage);
+      const warningMessage = "Objeto diferente de um array ou array vazio, não foram encontrados representantes cadastrados.";
+      console.warn(warningMessage);
+      
+      // RESOLVED TODO: Verificação adicionada para verificar a mensagem "Nenhum cliente encontrado"
+      setRepresentativeNames([]);
+      return {
+        representatives: [],
+        isEmpty: true
+      };
     }
 
     // console.log(representatives);
     const representativeNames = representatives.map(rep => rep.name);
     // console.log(representativeNames);
     setRepresentativeNames(representativeNames);
-    return representatives;
+    return {
+      representatives,
+      isEmpty: false
+    };
   } catch (error) {
     console.error("Failed to initialize application:", error);
     throw error;
   }
 }
 
-// async function cleanUp()
+async function checkCustomerListView(isEmpty) {
+  const browser = await chromium.launch({ headless: false });
+  const context = await browser.newContext();
+  const page = await context.newPage();
+
+  try {
+    const landingPage = new LandingPage(page);
+    await landingPage.navigateToLogin();
+
+    const loginPage = new LoginPage(page);
+    await loginPage.login(config.LOGIN_EMAIL_FRONTEND, config.LOGIN_PASSWORD_FRONTEND);
+
+    const viewCustomers = new ViewCustomers(page);
+    
+    let result;
+    if (isEmpty) {
+      result = await viewCustomers.checkEmptyCustomerList();
+      console.log("Empty customer list check result:", result);
+      if (result.noCustomersMessageVisible) {
+        console.log("✅ Verification successful: 'Nenhum cliente encontrado' message is visible");
+      } else {
+        console.log("❌ Verification failed: 'Nenhum cliente encontrado' message is not visible");
+      }
+    } else {
+      result = await viewCustomers.checkCustomerListElements();
+      console.log("Customer list elements check result:", result);
+      if (result.allElementsVisible) {
+        console.log("✅ Verification successful: All customer data elements are visible");
+      } else {
+        console.log("❌ Verification failed: Some customer data elements are not visible");
+        console.log("Missing elements:", Object.entries(result.elements)
+          .filter(([_, data]) => !data.visible)
+          .map(([key]) => key)
+          .join(', '));
+      }
+    }
+
+    return result;
+  } catch (error) {
+    console.error('An error occurred during view check:', error);
+    throw error;
+  } finally {
+    await browser.close();
+  }
+}
 
 async function runTest(customerType, capacity) {
   const browser = await chromium.launch({ headless: false });
@@ -59,7 +113,13 @@ async function runTest(customerType, capacity) {
   const page = await context.newPage();
 
   try {
-    await initializeApp();
+    const appState = await initializeApp();
+
+    // Check if the system is empty and perform view test accordingly
+    if (customerType === 'verificarLista') {
+      await browser.close(); // Close the current browser before starting the view test
+      return await checkCustomerListView(appState.isEmpty);
+    }
 
     const landingPage = new LandingPage(page);
     await landingPage.navigateToLogin();
@@ -140,7 +200,8 @@ const argv = yargs
         'representanteLegal',
         'tarefa',
         'usuario',
-        'escritorio'
+        'escritorio',
+        'verificarLista' // Added new option for checking customer list view
       ],
       demandOption: true
     },
