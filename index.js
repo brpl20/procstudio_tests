@@ -10,6 +10,7 @@ const CustomerCreateController = require('./Controllers/CustomerCreateController
 const CustomerCompanyCreateController = require('./Controllers/CustomerCompanyCreateController');
 const RepresentativeCreatePage = require('./PageObjects/RepresentativeCreatePage');
 const ViewCustomers = require('./ViewTests/ViewCustomers'); // Added import for ViewCustomers
+const EmailVerificationService = require('./Utils/EmailVerify'); // Import the email service
 
 // Import New Builders
 const AccountantCreate = require('./PageObjects/AccountantCreate');
@@ -121,6 +122,11 @@ async function runTest(customerType, capacity) {
       return await checkCustomerListView(appState.isEmpty);
     }
 
+    // Start email verification service for pessoa fisica creation
+    if (customerType === 'pessoaFisica') {
+      await EmailVerificationService.startVerification();
+    }
+
     const landingPage = new LandingPage(page);
     await landingPage.navigateToLogin();
 
@@ -181,10 +187,17 @@ async function runTest(customerType, capacity) {
     // Await For Check and Debug
     await new Promise(resolve => setTimeout(resolve, 7000));
     console.log('Form submitted successfully!');
+    console.log('Keeping main process alive for 3 minutes to allow monitoring for emails...');
+    await new Promise(resolve => setTimeout(resolve, 180000)); // 3 minutes
   } catch (error) {
     console.error('An error occurred:', error);
   } finally {
     await browser.close();
+    
+    // Stop email verification service if it's running
+    if (EmailVerificationService.verificationInProgress) {
+      await EmailVerificationService.stopVerification();
+    }
   }
 }
 
