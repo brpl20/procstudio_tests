@@ -12,17 +12,12 @@ Test Suit for ProcStudio in _staging using playwright:
 - npm test create -- --type=usuario
 - npm test create -- --type=escritorio
 
+# Fake E-mail Testing
+- Zoho: Muito complexo (oAuth);
+- Outros Serviços: O e-mail não chega, parece que já é filtrado como fake email;
+- https://temp-mail.io/ => Única alternativa viável se for mesmo necessário;
 
-<!-- - Arrumar "Senha do INSS" -->
-<!-- - Aguardar alterações do front => `+` e `download` -->
-<!-- - Terminar Sistema: Helpers + API Requests para comparar Front com Back + Docs -->
-<!-- - Corrigir parâmetros; -->
-<!-- - Adicionar emails e telefones adicionais (+); -->
-<!-- - Aguardar autoatribuição do representante; -->
-<!-- - Desativar IA Methods; -->
-<!-- - Download direto da Aws => Desativar; -->
-<!-- - Mamoth => Desativar até ser necessário IA e comparação;  -->
-<!-- - Adicionar mais tempo de espera para API do CEP;  -->
+## ToDo
 - Limpar Código + cl em geral;
 - Atualizar e ajustar métodos novos: 
     - Representante (Direto); 

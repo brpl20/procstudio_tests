@@ -1,5 +1,8 @@
 # .gitignore
 
+# Downloads
+*.docx
+
 # Dependency directories
 node_modules/
 
