@@ -1,10 +1,10 @@
 # ProcStudio Testing 
 
 Test Suit for ProcStudio in _staging using playwright: 
-<!-- - npm test create -- --type=pessoaFisica --capacity=random -->
 - npm test create -- --type=pessoaFisica --capacity=Capaz
 - npm test create -- --type=pessoaFisica --capacity="Relativamente Incapaz" 
 - npm test create -- --type=pessoaFisica --capacity="Absolutamente Incapaz"
+<!-- - npm test create -- --type=pessoaFisica --capacity=random -->
 - npm test create -- --type=pessoaJuridica
 - npm test create -- --type=contador
 - npm test create -- --type=representanteLegal
@@ -18,7 +18,7 @@ Test Suit for ProcStudio in _staging using playwright:
 - https://temp-mail.io/ => Única alternativa viável se for mesmo necessário;
 
 ## ToDo
-- Limpar Código + cl em geral;
+- Limpar Código;
 - Atualizar e ajustar métodos novos: 
     - Representante (Direto); 
     - Contador; 
@@ -33,6 +33,11 @@ Test Suit for ProcStudio in _staging using playwright:
 - Ajustar Views;
 - Testar Campos Obrigatórios;
 - Criar método de new Work (Hard);
+- Testar Erros - Ir e Voltar;
+- Arquivar e Deletar;
+- Inserir informações banco de dados;
+- Testar Método de E-mail;
+- Testar velocidade de carregamento sistema;
 
 # Aprendizados
 - Usar mais debugging do Playwright => `await this.page.pause(); // resume para continuar`

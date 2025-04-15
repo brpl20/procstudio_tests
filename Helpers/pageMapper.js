@@ -1,4 +1,6 @@
 // pageMapper.js
+// Este mapeador ajuda a criar os testes fazendo avaliações
+// Nos Formulários
 const { chromium } = require('playwright');
 const fs = require('fs').promises;
 const config = require('../config');
