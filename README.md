@@ -1,10 +1,10 @@
 # ProcStudio Testing 
 
 Test Suit for ProcStudio in _staging using playwright: 
-<!-- - npm test create -- --type=pessoaFisica --capacity=random -->
 - npm test create -- --type=pessoaFisica --capacity=Capaz
 - npm test create -- --type=pessoaFisica --capacity="Relativamente Incapaz" 
 - npm test create -- --type=pessoaFisica --capacity="Absolutamente Incapaz"
+<!-- - npm test create -- --type=pessoaFisica --capacity=random -->
 - npm test create -- --type=pessoaJuridica
 - npm test create -- --type=contador
 - npm test create -- --type=representanteLegal
@@ -12,18 +12,13 @@ Test Suit for ProcStudio in _staging using playwright:
 - npm test create -- --type=usuario
 - npm test create -- --type=escritorio
 
+# Fake E-mail Testing
+- Zoho: Muito complexo (oAuth);
+- Outros Serviços: O e-mail não chega, parece que já é filtrado como fake email;
+- https://temp-mail.io/ => Única alternativa viável se for mesmo necessário;
 
-<!-- - Arrumar "Senha do INSS" -->
-<!-- - Aguardar alterações do front => `+` e `download` -->
-<!-- - Terminar Sistema: Helpers + API Requests para comparar Front com Back + Docs -->
-<!-- - Corrigir parâmetros; -->
-<!-- - Adicionar emails e telefones adicionais (+); -->
-<!-- - Aguardar autoatribuição do representante; -->
-<!-- - Desativar IA Methods; -->
-<!-- - Download direto da Aws => Desativar; -->
-<!-- - Mamoth => Desativar até ser necessário IA e comparação;  -->
-<!-- - Adicionar mais tempo de espera para API do CEP;  -->
-- Limpar Código + cl em geral;
+## ToDo
+- Limpar Código;
 - Atualizar e ajustar métodos novos: 
     - Representante (Direto); 
     - Contador; 
@@ -38,6 +33,11 @@ Test Suit for ProcStudio in _staging using playwright:
 - Ajustar Views;
 - Testar Campos Obrigatórios;
 - Criar método de new Work (Hard);
+- Testar Erros - Ir e Voltar;
+- Arquivar e Deletar;
+- Inserir informações banco de dados;
+- Testar Método de E-mail;
+- Testar velocidade de carregamento sistema;
 
 # Aprendizados
 - Usar mais debugging do Playwright => `await this.page.pause(); // resume para continuar`

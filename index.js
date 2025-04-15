@@ -9,8 +9,8 @@ const CustomerIndexPage = require('./PageObjects/CustomerIndexPage');
 const CustomerCreateController = require('./Controllers/CustomerCreateController');
 const CustomerCompanyCreateController = require('./Controllers/CustomerCompanyCreateController');
 const RepresentativeCreatePage = require('./PageObjects/RepresentativeCreatePage');
-const ViewCustomers = require('./ViewTests/ViewCustomers'); // Added import for ViewCustomers
-const EmailVerificationService = require('./Utils/EmailVerify'); // Import the email service
+const ViewCustomers = require('./ViewTests/ViewCustomers'); 
+// const EmailVerificationService = require('./Utils/EmailVerify'); // Desabilitado 
 
 // Import New Builders
 const AccountantCreate = require('./PageObjects/AccountantCreate');
@@ -122,10 +122,12 @@ async function runTest(customerType, capacity) {
       return await checkCustomerListView(appState.isEmpty);
     }
 
-    // Start email verification service for pessoa fisica creation
-    if (customerType === 'pessoaFisica') {
-      await EmailVerificationService.startVerification();
-    }
+    // Serviço de Teste de E-mail Desabilitado
+    // Importante para verificar a consistência e tempo de 
+    // Entrega do E-mail
+    // if (customerType === 'pessoaFisica') {
+    //   await EmailVerificationService.startVerification();
+    // }
 
     const landingPage = new LandingPage(page);
     await landingPage.navigateToLogin();
@@ -194,10 +196,9 @@ async function runTest(customerType, capacity) {
   } finally {
     await browser.close();
     
-    // Stop email verification service if it's running
-    if (EmailVerificationService.verificationInProgress) {
-      await EmailVerificationService.stopVerification();
-    }
+    // if (EmailVerificationService.verificationInProgress) {
+    //   await EmailVerificationService.stopVerification();
+    // }
   }
 }
 
